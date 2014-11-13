@@ -4,7 +4,7 @@ package com.example.student.pythonlights;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.app.DialogFragment;
+import android.support.v4.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -27,7 +27,6 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -122,6 +121,7 @@ public class MainActivity extends FragmentActivity {
                 errorFragment.show(getSupportFragmentManager(), "Location Updates");
             }
         }
+        return false;
     }
 
     @Override
