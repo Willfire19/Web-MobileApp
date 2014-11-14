@@ -110,27 +110,28 @@ public class MainActivity extends FragmentActivity implements
              * If no resolution is available, display a dialog to the
              * user with the error.
              */
-            GooglePlayServicesUtil.showErrorDialogFragment(connectionResult.getErrorCode(),this,2);
+            GooglePlayServicesUtil.showErrorDialogFragment(connectionResult.getErrorCode(), this, 2);
             Log.w("test", "connection failed" + connectionResult.getErrorCode());
         }
     }
-
-    
 
 
     // Define a DialogFragment that displays the error dialog
     public static class ErrorDialogFragment extends DialogFragment {
         // Global field to contain the error dialog
         private Dialog mDialog;
+
         // Default constructor. Sets the dialog field to null
         public ErrorDialogFragment() {
             super();
             mDialog = null;
         }
+
         // Set the dialog to display
         public void setDialog(Dialog dialog) {
             mDialog = dialog;
         }
+
         // Return a Dialog to the DialogFragment.
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -148,13 +149,13 @@ public class MainActivity extends FragmentActivity implements
         // Decide what to do based on the original request code
         switch (requestCode) {
             //...
-            case CONNECTION_FAILURE_RESOLUTION_REQUEST :
+            case CONNECTION_FAILURE_RESOLUTION_REQUEST:
             /*
              * If the result code is Activity.RESULT_OK, try
              * to connect again
              */
                 switch (resultCode) {
-                    case Activity.RESULT_OK :
+                    case Activity.RESULT_OK:
                     /*
                      * Try the request again
                      */
@@ -210,8 +211,6 @@ public class MainActivity extends FragmentActivity implements
         mLocationClient = new LocationClient(this, this, this);
 
 
-
-
     }
 
     /*
@@ -244,6 +243,11 @@ public class MainActivity extends FragmentActivity implements
 //        startActivity(intent);
 //    }
 
+    public void setLocation() {
+        mCurrentLocation = mLocationClient.getLastLocation();
+        EditText editLocality = (EditText) findViewById(R.locality.textView);
+        editLocality.setText(Location.convert(mCurrentLocation.getLatitude(), Location.FORMAT_DEGREES) + " " + Location.convert(mCurrentLocation.getLongitude(), Location.FORMAT_DEGREES));
+    }
 
     public void getLocation(View view){
         if (isConnected) {
