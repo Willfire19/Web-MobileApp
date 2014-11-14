@@ -38,6 +38,13 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
+import android.app.ListActivity;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.AdapterView.OnItemClickListener;
+
 
 public class MainActivity extends FragmentActivity implements
         GooglePlayServicesClient.ConnectionCallbacks,
@@ -204,7 +211,16 @@ public class MainActivity extends FragmentActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        String[] DAYS = new String[] {"Sunday", "Monday", "Tuesday", "Wednesday",
+                "Thursday", "Friday", "Saturday"};
+
         setContentView(R.layout.activity_main);
+
+        ArrayAdapter adapter = new ArrayAdapter<String>(this,
+                R.layout.activity_main, DAYS);
+
+        ListView listView = (ListView) findViewById(R.id.day_list);
+        listView.setAdapter(adapter);
         Log.w("test", "this should start the app");
         /*
          * Create a new location client, using the enclosing class to
@@ -367,5 +383,9 @@ public class MainActivity extends FragmentActivity implements
         }
 
         return super.onOptionsItemSelected(item);
+
+
     }
+
+
 }
