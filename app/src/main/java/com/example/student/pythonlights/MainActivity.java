@@ -16,7 +16,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-
+import android.location.*;
+import java.util.List;
+import java.util.Locale;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -243,10 +245,23 @@ public class MainActivity extends FragmentActivity implements
 //        startActivity(intent);
 //    }
 
-    public void setLocation() {
+    public void setLocation(View view) {
         mCurrentLocation = mLocationClient.getLastLocation();
-        EditText editLocality = (EditText) findViewById(R.locality.textView);
-        editLocality.setText(Location.convert(mCurrentLocation.getLatitude(), Location.FORMAT_DEGREES) + " " + Location.convert(mCurrentLocation.getLongitude(), Location.FORMAT_DEGREES));
+        EditText editLocality = (EditText) findViewById(R.id.locality);
+        Geocoder gcd = new Geocoder(this, Locale.getDefault());
+        double lat = mCurrentLocation.getLatitude();
+        double lng = mCurrentLocation.getLongitude();
+        try {
+            List<Address> addresses = gcd.getFromLocation(lat, lng, 1);
+            //if (addresses.size() > 0)
+                //System.out.println(addresses.get(0).getLocality());
+            editLocality.setText(addresses.get(0).getLocality());
+
+        }
+        catch(Exception e) {
+
+        }
+        //editLocality.setText(Location.convert(mCurrentLocation.getLatitude(), Location.FORMAT_DEGREES) + " " + Location.convert(mCurrentLocation.getLongitude(), Location.FORMAT_DEGREES));
     }
 
     public void getLocation(View view){
