@@ -244,8 +244,8 @@ public class MainActivity extends FragmentActivity implements
 //        startActivity(intent);
 //    }
 
-    /*Called when green lights button is pressed*/
-    public void greenLightsOn(View view){
+
+    public void getLocation(View view){
         if (isConnected) {
             try {
                 mCurrentLocation = mLocationClient.getLastLocation();
@@ -255,6 +255,10 @@ public class MainActivity extends FragmentActivity implements
                 Log.w("test", e);
             }
         }
+    }
+
+    /*Called when green lights button is pressed*/
+    public void greenLightsOn(View view){
         Runnable runnable = new Runnable() {
             public void run() {
 
