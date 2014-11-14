@@ -42,6 +42,7 @@ public class MainActivity extends FragmentActivity implements
         GooglePlayServicesClient.OnConnectionFailedListener {
 
     public static final String EXTRA_MESSAGE = "blah";
+    public static boolean isConnected = false;
 
     // Global constants
     /*
@@ -64,7 +65,7 @@ public class MainActivity extends FragmentActivity implements
     public void onConnected(Bundle dataBundle) {
         // Display the connection status
         Toast.makeText(this, "Connected", Toast.LENGTH_SHORT).show();
-
+        isConnected = true;
     }
 
     /*
@@ -109,7 +110,7 @@ public class MainActivity extends FragmentActivity implements
              * If no resolution is available, display a dialog to the
              * user with the error.
              */
-//            showErrorDialog(connectionResult.getErrorCode());
+            GooglePlayServicesUtil.showErrorDialogFragment(connectionResult.getErrorCode(),this,2);
             Log.w("test", "connection failed" + connectionResult.getErrorCode());
         }
     }
@@ -220,6 +221,7 @@ public class MainActivity extends FragmentActivity implements
     protected void onStart() {
         super.onStart();
         // Connect the client.
+        Log.w("test", "Attempting to connect");
         mLocationClient.connect();
     }
 
@@ -244,21 +246,16 @@ public class MainActivity extends FragmentActivity implements
 
     /*Called when green lights button is pressed*/
     public void greenLightsOn(View view){
-        try {
-            mCurrentLocation = mLocationClient.getLastLocation();
-            Log.w("test", "mCurrentLocation is: " + mCurrentLocation);
+        if (isConnected) {
+            try {
+                mCurrentLocation = mLocationClient.getLastLocation();
+                Log.w("test", "mCurrentLocation is: " + mCurrentLocation);
+            }
+            catch(Exception e) {
+                Log.w("test", e);
+            }
         }
-        catch(Exception e) {
-            Log.w("test", "mCurrentLocation could not be retrieved.");
-        }
-
-
-
-
         Runnable runnable = new Runnable() {
-
-
-
             public void run() {
 
                 EditText editIp = (EditText) findViewById(R.id.editText);
@@ -324,7 +321,6 @@ public class MainActivity extends FragmentActivity implements
         };
 
         new Thread(runnable).start();
-
     }
 
 
