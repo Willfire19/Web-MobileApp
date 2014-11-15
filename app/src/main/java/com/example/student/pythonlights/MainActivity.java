@@ -216,11 +216,11 @@ public class MainActivity extends FragmentActivity implements
 
         setContentView(R.layout.activity_main);
 
-        ArrayAdapter adapter = new ArrayAdapter<String>(this,
-                R.layout.activity_main, DAYS);
-
-        ListView listView = (ListView) findViewById(R.id.day_list);
-        listView.setAdapter(adapter);
+//        ArrayAdapter adapter = new ArrayAdapter<String>(this,
+//                R.layout.activity_main, DAYS);
+//
+//        ListView listView = (ListView) findViewById(R.id.day_list);
+//        listView.setAdapter(adapter);
         Log.w("test", "this should start the app");
         /*
          * Create a new location client, using the enclosing class to
@@ -299,12 +299,20 @@ public class MainActivity extends FragmentActivity implements
 
                 EditText editIp = (EditText) findViewById(R.id.editText);
                 String ip_address = editIp.getText().toString();
+                HttpPost post;
+                if(ip_address.equals("")){
+                    Log.w("test", "an ip address was not inputted");
+                    post = new HttpPost("http://172.27.98.94/rpi");
+                }
+                else{
+                    post = new HttpPost("http://" + ip_address + "/rpi");
+                }
 
                 Log.w("test", "Before HttpClient");
                 DefaultHttpClient client = new DefaultHttpClient();
                 Log.w("test", "httpclient is successfully made");
-//                HttpPost post = new HttpPost("http://172.27.98.94/rpi");
-                HttpPost post = new HttpPost("http://" + ip_address + "/rpi");
+//
+
 
                 Log.w("test", "post is successfully made");
 
