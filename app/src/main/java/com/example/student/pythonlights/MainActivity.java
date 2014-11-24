@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.Toast;
 import android.location.*;
 import java.util.List;
@@ -261,6 +262,8 @@ public class MainActivity extends FragmentActivity implements
 //        startActivity(intent);
 //    }
 
+
+
     public void setLocation(View view) {
         mCurrentLocation = mLocationClient.getLastLocation();
         EditText editLocality = (EditText) findViewById(R.id.locality);
@@ -290,6 +293,72 @@ public class MainActivity extends FragmentActivity implements
                 Log.w("test", e);
             }
         }
+    }
+
+    /*Called when update weather*/
+    public void updateWeather(View view) {
+        Runnable runnable = new Runnable() {
+            public void run() {
+                HttpPost post;
+                Switch gpsSwitch = (Switch) findViewById(R.id.GPS);
+                if (gpsSwitch != null){
+                    if (gpsSwitch.isChecked()){
+                        //use latitude and longitude
+                        post = new HttpPost("http://api.openweathermap.org/data/2.5/weather?lat="+mCurrentLocation.getLatitude()+
+                                "&lon="+ mCurrentLocation.getLongitude());
+                    }
+                    else{
+                        EditText editLocality = (EditText) findViewById(R.id.locality);
+                        String city = editLocality.getText().toString();
+                        if (city != null && !city.equals("")) {
+                            post = new HttpPost("http://api.openweathermap.org/data/2.5/weather?q="+city);
+                        }
+                        else{
+                            //Todo: No city, so notify user
+                            Log.v("test","No city given");
+                            return;
+                        }
+                    }
+                    Log.w("test", "Before HttpClient");
+                    DefaultHttpClient client = new DefaultHttpClient();
+                    Log.w("test", "httpclient is successfully made");
+
+//                    ArrayList lights = new ArrayList();
+//                    JSONObject header = new JSONObject();
+//                    try {
+//                        header.put("lightId", 1);
+//                        header.put("red", 0);
+//                        header.put("green", 255);
+//                        header.put("blue", 0);
+//                        header.put("intensity", 0.75);
+//                        Log.w("test", "individual light is made");
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//                    lights.add(header);
+//                    JSONObject jsonobj = new JSONObject();
+//                    try {
+//                        jsonobj.put("lights", lights);
+//                        jsonobj.put("propagate", "true");
+//                        Log.w("test", "JSON data is constructed");
+//                    jsonobj.put("lights", "" );
+//                    jsonobj.put("propagate", "true" );
+                    StringEntity se = null;
+                    try {
+                        HttpResponse resp = client.execute(post);
+                        Log.v("test",resp.toString());
+//                    client.execute(post);
+
+                        Log.w("test", "POST data is sent to raspberry pi");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            }
+        };
+
+        new Thread(runnable).start();
     }
 
     /*Called when green lights button is pressed*/
