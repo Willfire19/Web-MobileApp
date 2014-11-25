@@ -18,6 +18,9 @@ import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.Toast;
 import android.location.*;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Locale;
 import com.google.android.gms.common.ConnectionResult;
@@ -25,6 +28,7 @@ import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.LocationClient;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 
@@ -323,33 +327,26 @@ public class MainActivity extends FragmentActivity implements
                     DefaultHttpClient client = new DefaultHttpClient();
                     Log.w("test", "httpclient is successfully made");
 
-//                    ArrayList lights = new ArrayList();
-//                    JSONObject header = new JSONObject();
-//                    try {
-//                        header.put("lightId", 1);
-//                        header.put("red", 0);
-//                        header.put("green", 255);
-//                        header.put("blue", 0);
-//                        header.put("intensity", 0.75);
-//                        Log.w("test", "individual light is made");
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
-//                    lights.add(header);
-//                    JSONObject jsonobj = new JSONObject();
-//                    try {
-//                        jsonobj.put("lights", lights);
-//                        jsonobj.put("propagate", "true");
-//                        Log.w("test", "JSON data is constructed");
-//                    jsonobj.put("lights", "" );
-//                    jsonobj.put("propagate", "true" );
                     StringEntity se = null;
                     try {
                         HttpResponse resp = client.execute(post);
-                        Log.v("test",resp.toString());
-//                    client.execute(post);
+                        HttpEntity entity = resp.getEntity();
+                        StringBuilder sb = new StringBuilder();
+                        try {
+                            BufferedReader reader =
+                                    new BufferedReader(new InputStreamReader(entity.getContent()), 65728);
+                            String line = null;
 
-                        Log.w("test", "POST data is sent to raspberry pi");
+                            while ((line = reader.readLine()) != null) {
+                                sb.append(line);
+                            }
+                        }
+                        catch (IOException e) { e.printStackTrace(); }
+                        catch (Exception e) { e.printStackTrace(); }
+
+                        System.out.println(sb.toString());
+                        Log.v("test","finalResult " + sb.toString());
+
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
