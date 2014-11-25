@@ -63,7 +63,8 @@ public class MainActivity extends FragmentActivity implements
     LocationClient mLocationClient;
     Location mCurrentLocation;
     Double currentTemp;
-    ArrayList<Double> temperatures = new ArrayList<Double>();
+    ArrayList<Double> lowTemps = new ArrayList<Double>();
+    ArrayList<Double> hiTemps = new ArrayList<Double>();
 
 
     /*
@@ -343,14 +344,19 @@ public class MainActivity extends FragmentActivity implements
     }
 
     public void popTemperatures(JSONArray body){
-        ArrayList<Double> temps = new ArrayList<Double>();
+        ArrayList<Double> tempsLo = new ArrayList<Double>();
+        ArrayList<Double> tempsHi = new ArrayList<Double>();
+
         try {
 //            JSONObject mainVal = body.getJSONObject("list");
             for(int i = 0; i < body.length(); i++) {
                 JSONObject mainVal = body.getJSONObject(i);
                 JSONObject Objtemps = mainVal.getJSONObject("temp");
-                temperatures.add(Objtemps.getDouble("day"));
+                tempsLo.add(Objtemps.getDouble("min"));
+                tempsHi.add(Objtemps.getDouble("max"));
             }
+            lowTemps = tempsLo;
+            hiTemps = tempsHi;
 
 //            return temps.getDouble("day");
 //            return temps;
@@ -378,7 +384,7 @@ public class MainActivity extends FragmentActivity implements
                         EditText editLocality = (EditText) findViewById(R.id.locality);
                         String city = editLocality.getText().toString();
                         if (city != null && !city.equals("")) {
-                            post = new HttpPost("http://api.openweathermap.org/data/2.5/forecast/daily?&cnt=2&mode=json&units=imperial&q="+city);
+                            post = new HttpPost("http://api.openweathermap.org/data/2.5/forecast/daily?&cnt=5&mode=json&units=imperial&q="+city);
                         }
                         else{
                             //Todo: No city, so notify user
@@ -398,11 +404,11 @@ public class MainActivity extends FragmentActivity implements
                         try {
                             JSONObject json = new JSONObject(body);
                             JSONArray main = json.getJSONArray("list");
-                            //Get 2 day temperatures
-                            temperatures = getTemperatures(main);
-//                            popTemperatures(main);
+                            //Get 2 day lowTemps
+//                            lowTemps = getTemperatures(main);
+                            popTemperatures(main);
 
-                            Log.v("test", temperatures.toString());
+//                            Log.v("test", lowTemps.toString());
 
 
 
@@ -419,21 +425,46 @@ public class MainActivity extends FragmentActivity implements
         };
 
         new Thread(getForecast).start();
-        TextView todaysTemp = (TextView) findViewById(R.id.LoDay0);
-        TextView tomorrowsTemp = (TextView) findViewById(R.id.LoDay1);
-        if (!temperatures.isEmpty()) {
-            todaysTemp.setText(temperatures.get(0).toString()+"° F");
+        TextView day0Low = (TextView) findViewById(R.id.LoDay0);
+        TextView day1Low = (TextView) findViewById(R.id.LoDay1);
+        TextView day2Low = (TextView) findViewById(R.id.LoDay2);
+        TextView day3Low = (TextView) findViewById(R.id.LoDay3);
+        TextView day4Low = (TextView) findViewById(R.id.LoDay4);
+        if (!lowTemps.isEmpty()&& lowTemps.size() >= 5) {
+            day0Low.setText(Math.round(lowTemps.get(0)) + "°");
+            day1Low.setText(Math.round(lowTemps.get(1))+"°");
+            day2Low.setText(Math.round(lowTemps.get(2)) + "°");
+            day3Low.setText(Math.round(lowTemps.get(3)) + "°");
+            day4Low.setText(Math.round(lowTemps.get(4)) + "°");
         }
         else {
-            todaysTemp.setText("Updating");
-            Log.v("test", temperatures.toString());
+            day0Low.setText("Updating");
+            day1Low.setText("Updating");
+            day2Low.setText("Updating");
+            day3Low.setText("Updating");
+            day4Low.setText("Updating");
+            Log.v("test", "Low" + lowTemps.toString());
+
         }
-        if (!temperatures.isEmpty()) {
-            tomorrowsTemp.setText(temperatures.get(1).toString()+"° F");
+        TextView day0Hi = (TextView) findViewById(R.id.HiDay0);
+        TextView day1Hi = (TextView) findViewById(R.id.HiDay1);
+        TextView day2Hi = (TextView) findViewById(R.id.HiDay2);
+        TextView day3Hi = (TextView) findViewById(R.id.HiDay3);
+        TextView day4Hi = (TextView) findViewById(R.id.HiDay4);
+        if (!hiTemps.isEmpty()&& hiTemps.size() >= 5) {
+            day0Hi.setText(Math.round(hiTemps.get(0)) + "°");
+            day1Hi.setText(Math.round(hiTemps.get(1))+"°");
+            day2Hi.setText(Math.round(hiTemps.get(2)) + "°");
+            day3Hi.setText(Math.round(hiTemps.get(3)) + "°");
+            day4Hi.setText(Math.round(hiTemps.get(4)) + "°");
         }
         else {
-            tomorrowsTemp.setText("Updating");
-            Log.v("test", temperatures.toString());
+            day0Hi.setText("Updating");
+            day1Hi.setText("Updating");
+            day2Hi.setText("Updating");
+            day3Hi.setText("Updating");
+            day4Hi.setText("Updating");
+            Log.v("test", "High" + hiTemps.toString());
         }
 
         Runnable runnable = new Runnable() {
