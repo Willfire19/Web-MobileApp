@@ -440,6 +440,7 @@ public class MainActivity extends FragmentActivity implements
                 day2 = "Tuesday";
                 day3 = "Wednesday";
                 day4 = "Thursday";
+                break;
             }
             case Calendar.MONDAY: {
                 day0 = "Monday";
@@ -447,6 +448,7 @@ public class MainActivity extends FragmentActivity implements
                 day2 = "Wednesday";
                 day3 = "Thursday";
                 day4 = "Friday";
+                break;
             }
             case Calendar.TUESDAY: {
                 day0 = "Tuesday";
@@ -454,6 +456,7 @@ public class MainActivity extends FragmentActivity implements
                 day2 = "Thursday";
                 day3 = "Friday";
                 day4 = "Saturday";
+                break;
             }
             case Calendar.WEDNESDAY: {
                 day0 = "Wednesday";
@@ -461,6 +464,7 @@ public class MainActivity extends FragmentActivity implements
                 day2 = "Friday";
                 day3 = "Saturday";
                 day4 = "Sunday";
+                break;
             }
             case Calendar.THURSDAY: {
                 day0 = "Thursday";
@@ -468,6 +472,7 @@ public class MainActivity extends FragmentActivity implements
                 day2 = "Saturday";
                 day3 = "Sunday";
                 day4 = "Monday";
+                break;
             }
             case Calendar.FRIDAY: {
                 day0 = "Friday";
@@ -475,6 +480,7 @@ public class MainActivity extends FragmentActivity implements
                 day2 = "Sunday";
                 day3 = "Monday";
                 day4 = "Tuesday";
+                break;
             }
             case Calendar.SATURDAY: {
                 day0 = "Saturday";
@@ -482,6 +488,7 @@ public class MainActivity extends FragmentActivity implements
                 day2 = "Monday";
                 day3 = "Tuesday";
                 day4 = "Wednesday";
+                break;
             }
 
         }
