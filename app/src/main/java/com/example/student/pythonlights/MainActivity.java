@@ -24,6 +24,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Locale;
+import java.util.Calendar;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -419,6 +420,75 @@ public class MainActivity extends FragmentActivity implements
         };
 
         new Thread(getForecast).start();
+        Calendar calendar = Calendar.getInstance();
+        int day = calendar.get(Calendar.DAY_OF_WEEK);
+        String day0 = "";
+        String day1 = "";
+        String day2 = "";
+        String day3 = "";
+        String day4 = "";
+        switch (day) {
+            case Calendar.SUNDAY: {
+                day0 = "Sunday";
+                day1 = "Monday";
+                day2 = "Tuesday";
+                day3 = "Wednesday";
+                day4 = "Thursday";
+            }
+            case Calendar.MONDAY: {
+                day0 = "Monday";
+                day1 = "Tuesday";
+                day2 = "Wednesday";
+                day3 = "Thursday";
+                day4 = "Friday";
+            }
+            case Calendar.TUESDAY: {
+                day0 = "Tuesday";
+                day1 = "Wednesday";
+                day2 = "Thursday";
+                day3 = "Friday";
+                day4 = "Saturday";
+            }
+            case Calendar.WEDNESDAY: {
+                day0 = "Wednesday";
+                day1 = "Thursday";
+                day2 = "Friday";
+                day3 = "Saturday";
+                day4 = "Sunday";
+            }
+            case Calendar.THURSDAY: {
+                day0 = "Thursday";
+                day1 = "Friday";
+                day2 = "Saturday";
+                day3 = "Sunday";
+                day4 = "Monday";
+            }
+            case Calendar.FRIDAY: {
+                day0 = "Friday";
+                day1 = "Saturday";
+                day2 = "Sunday";
+                day3 = "Monday";
+                day4 = "Tuesday";
+            }
+            case Calendar.SATURDAY: {
+                day0 = "Saturday";
+                day1 = "Sunday";
+                day2 = "Monday";
+                day3 = "Tuesday";
+                day4 = "Wednesday";
+            }
+
+        }
+        TextView day0Temp = (TextView) findViewById(R.id.day0);
+        TextView day1Temp = (TextView) findViewById(R.id.day1);
+        TextView day2Temp = (TextView) findViewById(R.id.day2);
+        TextView day3Temp = (TextView) findViewById(R.id.day3);
+        TextView day4Temp = (TextView) findViewById(R.id.day4);
+        day0Temp.setText(day0);
+        day1Temp.setText(day1);
+        day2Temp.setText(day2);
+        day3Temp.setText(day3);
+        day4Temp.setText(day4);
         TextView todaysTemp = (TextView) findViewById(R.id.LoDay0);
         TextView tomorrowsTemp = (TextView) findViewById(R.id.LoDay1);
         if (!temperatures.isEmpty()) {
