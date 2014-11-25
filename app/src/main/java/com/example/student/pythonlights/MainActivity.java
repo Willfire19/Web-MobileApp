@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.location.*;
 
@@ -30,7 +31,6 @@ import com.google.android.gms.location.LocationClient;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
 
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
@@ -42,13 +42,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-
-import android.app.ListActivity;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
 
 
 public class MainActivity extends FragmentActivity implements
@@ -68,6 +61,7 @@ public class MainActivity extends FragmentActivity implements
     // Global variable to hold the current location
     LocationClient mLocationClient;
     Location mCurrentLocation;
+    Double currentTemp;
 
 
     /*
@@ -299,6 +293,33 @@ public class MainActivity extends FragmentActivity implements
         }
     }
 
+
+    public String parseEntity(HttpEntity entity){
+        StringBuilder sb = new StringBuilder();
+        try {
+            BufferedReader reader =
+                    new BufferedReader(new InputStreamReader(entity.getContent()), 65728);
+            String line = null;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+            }
+        }
+        catch (IOException e) { e.printStackTrace(); }
+        catch (Exception e) { e.printStackTrace(); }
+
+        return sb.toString();
+    }
+
+    public double getTemperature(JSONObject body){
+        try {
+            JSONObject mainVal = body.getJSONObject("main");
+            return mainVal.getDouble("temp");
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
     /*Called when update weather*/
     public void updateWeather(View view) {
         Runnable runnable = new Runnable() {
@@ -309,13 +330,13 @@ public class MainActivity extends FragmentActivity implements
                     if (gpsSwitch.isChecked()){
                         //use latitude and longitude
                         post = new HttpPost("http://api.openweathermap.org/data/2.5/weather?lat="+mCurrentLocation.getLatitude()+
-                                "&lon="+ mCurrentLocation.getLongitude());
+                                "&lon="+ mCurrentLocation.getLongitude()+"&units=imperial");
                     }
                     else{
                         EditText editLocality = (EditText) findViewById(R.id.locality);
                         String city = editLocality.getText().toString();
                         if (city != null && !city.equals("")) {
-                            post = new HttpPost("http://api.openweathermap.org/data/2.5/weather?q="+city);
+                            post = new HttpPost("http://api.openweathermap.org/data/2.5/weather?units=imperial&q="+city);
                         }
                         else{
                             //Todo: No city, so notify user
@@ -331,21 +352,17 @@ public class MainActivity extends FragmentActivity implements
                     try {
                         HttpResponse resp = client.execute(post);
                         HttpEntity entity = resp.getEntity();
-                        StringBuilder sb = new StringBuilder();
+                        String body = parseEntity(entity);
                         try {
-                            BufferedReader reader =
-                                    new BufferedReader(new InputStreamReader(entity.getContent()), 65728);
-                            String line = null;
+                            JSONObject main = new JSONObject(body);
+                            //Get main temp
+                            currentTemp = getTemperature(main);
 
-                            while ((line = reader.readLine()) != null) {
-                                sb.append(line);
-                            }
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-                        catch (IOException e) { e.printStackTrace(); }
-                        catch (Exception e) { e.printStackTrace(); }
-
-                        System.out.println(sb.toString());
-                        Log.v("test","finalResult " + sb.toString());
 
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -356,6 +373,13 @@ public class MainActivity extends FragmentActivity implements
         };
 
         new Thread(runnable).start();
+        TextView currentTempView = (TextView) findViewById(R.id.textView21);
+        if (currentTemp != null) {
+            currentTempView.setText(currentTemp.toString()+"° F");
+        }
+        else {
+            currentTempView.setText("Updating");
+        }
     }
 
     /*Called when green lights button is pressed*/
