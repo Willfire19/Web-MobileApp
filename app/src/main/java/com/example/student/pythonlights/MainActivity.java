@@ -372,7 +372,7 @@ public class MainActivity extends FragmentActivity implements
                     if (gpsSwitch.isChecked()){
                         //use latitude and longitude
                         post = new HttpPost("http://api.openweathermap.org/data/2.5/forecast/daily?lat="+mCurrentLocation.getLatitude()+
-                                "&lon="+ mCurrentLocation.getLongitude()+"&cnt=2&mode=json&units=imperial");
+                                "&lon="+ mCurrentLocation.getLongitude()+"&cnt=5&mode=json&units=imperial");
                     }
                     else{
                         EditText editLocality = (EditText) findViewById(R.id.locality);
@@ -419,8 +419,8 @@ public class MainActivity extends FragmentActivity implements
         };
 
         new Thread(getForecast).start();
-        TextView todaysTemp = (TextView) findViewById(R.id.textView30);
-        TextView tomorrowsTemp = (TextView) findViewById(R.id.textView31);
+        TextView todaysTemp = (TextView) findViewById(R.id.LoDay0);
+        TextView tomorrowsTemp = (TextView) findViewById(R.id.LoDay1);
         if (!temperatures.isEmpty()) {
             todaysTemp.setText(temperatures.get(0).toString()+"° F");
         }

@@ -25,12 +25,13 @@
         android:id="@+id/editText"
         android:hint="@string/edit_message"
         android:layout_below="@+id/locality"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:text="ip Address" />
 
     <Button
         android:layout_width="161dp"
         android:layout_height="wrap_content"
-        android:text="@string/green_button"
+        android:text="All Green"
         android:id="@+id/button"
         android:onClick="greenLightsOn"
         android:layout_toEndOf="@+id/editText"
@@ -90,21 +91,21 @@
                 android:layout_height="wrap_content"
                 android:text="Hi"
                 android:id="@+id/textView22"
-                android:layout_column="1" />
+                android:layout_column="2" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Lo"
                 android:id="@+id/textView23"
-                android:layout_column="1" />
+                android:layout_column="3" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="% precip."
                 android:id="@+id/textView24"
-                android:layout_column="1" />
+                android:layout_column="4" />
 
         </TableRow>
 
@@ -116,37 +117,28 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Today"
-                android:id="@+id/textView2"
+                android:text="Monday"
+                android:id="@+id/day0"
                 android:layout_column="0" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New Text"
-                android:id="@+id/textView30"
-                android:layout_column="4" />
-
-
-        </TableRow>
-
-        <TableRow
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
+                android:id="@+id/HiDay0"
+                android:layout_column="2" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tomorrow"
-                android:id="@+id/textView3"
-                android:layout_column="0" />
+                android:id="@+id/LoDay0"
+                android:layout_column="3" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New Text"
-                android:id="@+id/textView31"
+                android:id="@+id/precipDay0"
                 android:layout_column="4" />
+
 
         </TableRow>
 
@@ -158,8 +150,26 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Tuesday"
-                android:id="@+id/textView4"
+                android:id="@+id/day1"
                 android:layout_column="0" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/HiDay1"
+                android:layout_column="2" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/LoDay1"
+                android:layout_column="3" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/precipDay1"
+                android:layout_column="4" />
 
         </TableRow>
 
@@ -171,8 +181,26 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Wednesday"
-                android:id="@+id/textView5"
+                android:id="@+id/day2"
                 android:layout_column="0" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/HiDay2"
+                android:layout_column="2" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/LoDay2"
+                android:layout_column="3" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/precipDay2"
+                android:layout_column="4" />
 
         </TableRow>
 
@@ -184,8 +212,26 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Thursday"
-                android:id="@+id/textView6"
+                android:id="@+id/day3"
                 android:layout_column="0" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/HiDay3"
+                android:layout_column="2" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/LoDay3"
+                android:layout_column="3" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/precipDay3"
+                android:layout_column="4" />
 
         </TableRow>
 
@@ -197,33 +243,30 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Friday"
-                android:id="@+id/textView7"
+                android:id="@+id/day4"
                 android:layout_column="0" />
-
-        </TableRow>
-
-        <TableRow
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Saturday"
-                android:id="@+id/textView8"
-                android:layout_column="0" />
+                android:id="@+id/HiDay4"
+                android:layout_column="2" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/LoDay4"
+                android:layout_column="3" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/precipDay4"
+                android:layout_column="4" />
 
         </TableRow>
-    </TableLayout>
 
-    <ListView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/listView"
-        android:layout_above="@+id/GPS"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginLeft="229dp" />
+    </TableLayout>
 
 
 </RelativeLayout>
