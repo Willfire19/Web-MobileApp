@@ -37,6 +37,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.HTTP;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.IOException;
@@ -62,6 +63,7 @@ public class MainActivity extends FragmentActivity implements
     LocationClient mLocationClient;
     Location mCurrentLocation;
     Double currentTemp;
+    ArrayList<Double> temperatures = new ArrayList<Double>();
 
 
     /*
@@ -320,8 +322,120 @@ public class MainActivity extends FragmentActivity implements
         }
     }
 
+    public ArrayList<Double> getTemperatures(JSONArray body){
+        ArrayList<Double> temps = new ArrayList<Double>();
+        try {
+//            JSONObject mainVal = body.getJSONObject("list");
+            for(int i = 0; i < body.length(); i++) {
+                JSONObject mainVal = body.getJSONObject(i);
+                JSONObject Objtemps = mainVal.getJSONObject("temp");
+                temps.add(Objtemps.getDouble("day"));
+            }
+
+//            return temps.getDouble("day");
+            return temps;
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+//            return -1;
+        }
+        return temps;
+    }
+
+    public void popTemperatures(JSONArray body){
+        ArrayList<Double> temps = new ArrayList<Double>();
+        try {
+//            JSONObject mainVal = body.getJSONObject("list");
+            for(int i = 0; i < body.length(); i++) {
+                JSONObject mainVal = body.getJSONObject(i);
+                JSONObject Objtemps = mainVal.getJSONObject("temp");
+                temperatures.add(Objtemps.getDouble("day"));
+            }
+
+//            return temps.getDouble("day");
+//            return temps;
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+//            return -1;
+        }
+//        return temps;
+    }
+
     /*Called when update weather*/
     public void updateWeather(View view) {
+        Runnable getForecast = new Runnable() {
+            public void run() {
+                HttpPost post;
+                Switch gpsSwitch = (Switch) findViewById(R.id.GPS);
+                if (gpsSwitch != null){
+                    if (gpsSwitch.isChecked()){
+                        //use latitude and longitude
+                        post = new HttpPost("http://api.openweathermap.org/data/2.5/forecast/daily?lat="+mCurrentLocation.getLatitude()+
+                                "&lon="+ mCurrentLocation.getLongitude()+"&cnt=2&mode=json&units=imperial");
+                    }
+                    else{
+                        EditText editLocality = (EditText) findViewById(R.id.locality);
+                        String city = editLocality.getText().toString();
+                        if (city != null && !city.equals("")) {
+                            post = new HttpPost("http://api.openweathermap.org/data/2.5/forecast/daily?&cnt=2&mode=json&units=imperial&q="+city);
+                        }
+                        else{
+                            //Todo: No city, so notify user
+                            Log.v("test","No city given");
+                            return;
+                        }
+                    }
+                    Log.w("test", "Before HttpClient");
+                    DefaultHttpClient client = new DefaultHttpClient();
+                    Log.w("test", "httpclient is successfully made");
+
+                    StringEntity se = null;
+                    try {
+                        HttpResponse resp = client.execute(post);
+                        HttpEntity entity = resp.getEntity();
+                        String body = parseEntity(entity);
+                        try {
+                            JSONObject json = new JSONObject(body);
+                            JSONArray main = json.getJSONArray("list");
+                            //Get 2 day temperatures
+                            temperatures = getTemperatures(main);
+//                            popTemperatures(main);
+
+                            Log.v("test", temperatures.toString());
+
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            }
+        };
+
+        new Thread(getForecast).start();
+        TextView todaysTemp = (TextView) findViewById(R.id.textView30);
+        TextView tomorrowsTemp = (TextView) findViewById(R.id.textView31);
+        if (!temperatures.isEmpty()) {
+            todaysTemp.setText(temperatures.get(0).toString()+"° F");
+        }
+        else {
+            todaysTemp.setText("Updating");
+            Log.v("test", temperatures.toString());
+        }
+        if (!temperatures.isEmpty()) {
+            tomorrowsTemp.setText(temperatures.get(1).toString()+"° F");
+        }
+        else {
+            tomorrowsTemp.setText("Updating");
+            Log.v("test", temperatures.toString());
+        }
+
         Runnable runnable = new Runnable() {
             public void run() {
                 HttpPost post;
