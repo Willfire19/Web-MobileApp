@@ -22,6 +22,7 @@ import android.location.*;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import com.google.android.gms.common.ConnectionResult;
