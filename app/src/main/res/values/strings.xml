@@ -8,5 +8,9 @@
     <string name="ip_button">Change Ip Address</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_ip_address">IpAddressActivity</string>
+    <string name="consumer_key">0VJ2QVBQYJqEBqNZ_0g6Xg</string>
+    <string name="consumer_secret">oI4ReNB4OsjHYCnczq4J9_3HLQ8</string>
+    <string name="token">_DUpeCYJqwWUjlXijdFIpNKvpQjAA_CV</string>
+    <string name="token_secret">ljnwwyEaVkZyyuaR5fCket9RWyw</string>
 
 </resources>
