@@ -78,8 +78,9 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/imageView2"
-                android:layout_column="8" />
+                android:id="@+id/imageCurrent"
+                android:layout_column="8"
+                android:focusable="true" />
         </TableRow>
 
         <TableRow
@@ -104,7 +105,6 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="% precip."
                 android:id="@+id/textView24"
                 android:layout_column="4" />
 
@@ -134,11 +134,11 @@
                 android:id="@+id/LoDay0"
                 android:layout_column="3" />
 
-            <TextView
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/precipDay0"
-                android:layout_column="4" />
+                android:id="@+id/imageDay0"
+                android:focusableInTouchMode="true" />
 
 
         </TableRow>
@@ -166,11 +166,11 @@
                 android:id="@+id/LoDay1"
                 android:layout_column="3" />
 
-            <TextView
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/precipDay1"
-                android:layout_column="4" />
+                android:id="@+id/imageDay1"
+                android:focusable="true" />
 
         </TableRow>
 
@@ -197,11 +197,11 @@
                 android:id="@+id/LoDay2"
                 android:layout_column="3" />
 
-            <TextView
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/precipDay2"
-                android:layout_column="4" />
+                android:id="@+id/imageDay2"
+                android:focusable="true" />
 
         </TableRow>
 
@@ -228,11 +228,10 @@
                 android:id="@+id/LoDay3"
                 android:layout_column="3" />
 
-            <TextView
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/precipDay3"
-                android:layout_column="4" />
+                android:id="@+id/imageDay3" />
 
         </TableRow>
 
@@ -259,11 +258,11 @@
                 android:id="@+id/LoDay4"
                 android:layout_column="3" />
 
-            <TextView
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/precipDay4"
-                android:layout_column="4" />
+                android:id="@+id/imageDay4"
+                android:focusableInTouchMode="true" />
 
         </TableRow>
 

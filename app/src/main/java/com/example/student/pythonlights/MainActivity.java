@@ -17,14 +17,22 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.ImageView;
 import android.widget.Toast;
 import android.location.*;
+import android.graphics.BitmapFactory;
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+
+
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -41,7 +49,6 @@ import org.apache.http.protocol.HTTP;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
@@ -214,7 +221,7 @@ public class MainActivity extends FragmentActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        String[] DAYS = new String[] {"Sunday", "Monday", "Tuesday", "Wednesday",
+        String[] DAYS = new String[]{"Sunday", "Monday", "Tuesday", "Wednesday",
                 "Thursday", "Friday", "Saturday"};
 
         setContentView(R.layout.activity_main);
@@ -265,7 +272,6 @@ public class MainActivity extends FragmentActivity implements
 //    }
 
 
-
     public void setLocation(View view) {
         mCurrentLocation = mLocationClient.getLastLocation();
         EditText editLocality = (EditText) findViewById(R.id.locality);
@@ -275,30 +281,28 @@ public class MainActivity extends FragmentActivity implements
         try {
             List<Address> addresses = gcd.getFromLocation(lat, lng, 1);
             //if (addresses.size() > 0)
-                //System.out.println(addresses.get(0).getLocality());
+            //System.out.println(addresses.get(0).getLocality());
             editLocality.setText(addresses.get(0).getLocality());
 
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
 
         }
         //editLocality.setText(Location.convert(mCurrentLocation.getLatitude(), Location.FORMAT_DEGREES) + " " + Location.convert(mCurrentLocation.getLongitude(), Location.FORMAT_DEGREES));
     }
 
-    public void getLocation(View view){
+    public void getLocation(View view) {
         if (isConnected) {
             try {
                 mCurrentLocation = mLocationClient.getLastLocation();
                 Log.w("test", "mCurrentLocation is: " + mCurrentLocation);
-            }
-            catch(Exception e) {
+            } catch (Exception e) {
                 Log.w("test", e);
             }
         }
     }
 
 
-    public String parseEntity(HttpEntity entity){
+    public String parseEntity(HttpEntity entity) {
         StringBuilder sb = new StringBuilder();
         try {
             BufferedReader reader =
@@ -307,14 +311,16 @@ public class MainActivity extends FragmentActivity implements
             while ((line = reader.readLine()) != null) {
                 sb.append(line);
             }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        catch (IOException e) { e.printStackTrace(); }
-        catch (Exception e) { e.printStackTrace(); }
 
         return sb.toString();
     }
 
-    public double getTemperature(JSONObject body){
+    public double getTemperature(JSONObject body) {
         try {
             JSONObject mainVal = body.getJSONObject("main");
             return mainVal.getDouble("temp");
@@ -324,11 +330,11 @@ public class MainActivity extends FragmentActivity implements
         }
     }
 
-    public ArrayList<Double> getTemperatures(JSONArray body){
+    public ArrayList<Double> getTemperatures(JSONArray body) {
         ArrayList<Double> temps = new ArrayList<Double>();
         try {
 //            JSONObject mainVal = body.getJSONObject("list");
-            for(int i = 0; i < body.length(); i++) {
+            for (int i = 0; i < body.length(); i++) {
                 JSONObject mainVal = body.getJSONObject(i);
                 JSONObject Objtemps = mainVal.getJSONObject("temp");
                 temps.add(Objtemps.getDouble("day"));
@@ -344,13 +350,13 @@ public class MainActivity extends FragmentActivity implements
         return temps;
     }
 
-    public void popTemperatures(JSONArray body){
+    public void popTemperatures(JSONArray body) {
         ArrayList<Double> tempsLo = new ArrayList<Double>();
         ArrayList<Double> tempsHi = new ArrayList<Double>();
 
         try {
 //            JSONObject mainVal = body.getJSONObject("list");
-            for(int i = 0; i < body.length(); i++) {
+            for (int i = 0; i < body.length(); i++) {
                 JSONObject mainVal = body.getJSONObject(i);
                 JSONObject Objtemps = mainVal.getJSONObject("temp");
                 tempsLo.add(Objtemps.getDouble("min"));
@@ -375,21 +381,19 @@ public class MainActivity extends FragmentActivity implements
             public void run() {
                 HttpPost post;
                 Switch gpsSwitch = (Switch) findViewById(R.id.GPS);
-                if (gpsSwitch != null){
-                    if (gpsSwitch.isChecked()){
+                if (gpsSwitch != null) {
+                    if (gpsSwitch.isChecked()) {
                         //use latitude and longitude
-                        post = new HttpPost("http://api.openweathermap.org/data/2.5/forecast/daily?lat="+mCurrentLocation.getLatitude()+
-                                "&lon="+ mCurrentLocation.getLongitude()+"&cnt=5&mode=json&units=imperial");
-                    }
-                    else{
+                        post = new HttpPost("http://api.openweathermap.org/data/2.5/forecast/daily?lat=" + mCurrentLocation.getLatitude() +
+                                "&lon=" + mCurrentLocation.getLongitude() + "&cnt=5&mode=json&units=imperial");
+                    } else {
                         EditText editLocality = (EditText) findViewById(R.id.locality);
                         String city = editLocality.getText().toString();
                         if (city != null && !city.equals("")) {
-                            post = new HttpPost("http://api.openweathermap.org/data/2.5/forecast/daily?&cnt=5&mode=json&units=imperial&q="+city);
-                        }
-                        else{
+                            post = new HttpPost("http://api.openweathermap.org/data/2.5/forecast/daily?&cnt=5&mode=json&units=imperial&q=" + city);
+                        } else {
                             //Todo: No city, so notify user
-                            Log.v("test","No city given");
+                            Log.v("test", "No city given");
                             return;
                         }
                     }
@@ -405,12 +409,39 @@ public class MainActivity extends FragmentActivity implements
                         try {
                             JSONObject json = new JSONObject(body);
                             JSONArray main = json.getJSONArray("list");
+                            JSONArray weather = json.getJSONArray("weather");
+                            JSONObject day0W = weather.getJSONObject(0);
+                            JSONObject day1W = weather.getJSONObject(1);
+                            JSONObject day2W = weather.getJSONObject(2);
+                            JSONObject day3W = weather.getJSONObject(3);
+                            JSONObject day4W = weather.getJSONObject(4);
+                            String day0Icon = day0W.getString("icon");
+                            String day1Icon = day1W.getString("icon");
+                            String day2Icon = day2W.getString("icon");
+                            String day3Icon = day3W.getString("icon");
+                            String day4Icon = day4W.getString("icon");
+
+                            new DownloadImageTask((ImageView) findViewById(R.id.imageDay0))
+                                    .execute("http://openweathermap.org/img/w/" + day0Icon + ".png");
+
+                            new DownloadImageTask((ImageView) findViewById(R.id.imageDay1))
+                                    .execute("http://openweathermap.org/img/w/" + day1Icon + ".png");
+
+                            new DownloadImageTask((ImageView) findViewById(R.id.imageDay2))
+                                    .execute("http://openweathermap.org/img/w/" + day2Icon + ".png");
+
+                            new DownloadImageTask((ImageView) findViewById(R.id.imageDay3))
+                                    .execute("http://openweathermap.org/img/w/" + day3Icon + ".png");
+
+                            new DownloadImageTask((ImageView) findViewById(R.id.imageDay4))
+                                    .execute("http://openweathermap.org/img/w/" + day4Icon + ".png");
+
                             //Get 2 day lowTemps
 //                            lowTemps = getTemperatures(main);
+
                             popTemperatures(main);
 
 //                            Log.v("test", lowTemps.toString());
-
 
 
                         } catch (JSONException e) {
@@ -490,133 +521,127 @@ public class MainActivity extends FragmentActivity implements
                 day4 = "Wednesday";
                 break;
             }
-
-        }
-        TextView day0Temp = (TextView) findViewById(R.id.day0);
-        TextView day1Temp = (TextView) findViewById(R.id.day1);
-        TextView day2Temp = (TextView) findViewById(R.id.day2);
-        TextView day3Temp = (TextView) findViewById(R.id.day3);
-        TextView day4Temp = (TextView) findViewById(R.id.day4);
-        day0Temp.setText(day0);
-        day1Temp.setText(day1);
-        day2Temp.setText(day2);
-        day3Temp.setText(day3);
-        day4Temp.setText(day4);
-        TextView day0Low = (TextView) findViewById(R.id.LoDay0);
-        TextView day1Low = (TextView) findViewById(R.id.LoDay1);
-        TextView day2Low = (TextView) findViewById(R.id.LoDay2);
-        TextView day3Low = (TextView) findViewById(R.id.LoDay3);
-        TextView day4Low = (TextView) findViewById(R.id.LoDay4);
-        if (!lowTemps.isEmpty()&& lowTemps.size() >= 5) {
-            day0Low.setText(Math.round(lowTemps.get(0)) + "°");
-            day1Low.setText(Math.round(lowTemps.get(1))+"°");
-            day2Low.setText(Math.round(lowTemps.get(2)) + "°");
-            day3Low.setText(Math.round(lowTemps.get(3)) + "°");
-            day4Low.setText(Math.round(lowTemps.get(4)) + "°");
-        }
-        else {
-            day0Low.setText("Updating");
-            day1Low.setText("Updating");
-            day2Low.setText("Updating");
-            day3Low.setText("Updating");
-            day4Low.setText("Updating");
-            Log.v("test", "Low" + lowTemps.toString());
-
-        }
-        TextView day0Hi = (TextView) findViewById(R.id.HiDay0);
-        TextView day1Hi = (TextView) findViewById(R.id.HiDay1);
-        TextView day2Hi = (TextView) findViewById(R.id.HiDay2);
-        TextView day3Hi = (TextView) findViewById(R.id.HiDay3);
-        TextView day4Hi = (TextView) findViewById(R.id.HiDay4);
-        if (!hiTemps.isEmpty()&& hiTemps.size() >= 5) {
-            day0Hi.setText(Math.round(hiTemps.get(0)) + "°");
-            day1Hi.setText(Math.round(hiTemps.get(1))+"°");
-            day2Hi.setText(Math.round(hiTemps.get(2)) + "°");
-            day3Hi.setText(Math.round(hiTemps.get(3)) + "°");
-            day4Hi.setText(Math.round(hiTemps.get(4)) + "°");
-        }
-        else {
-            day0Hi.setText("Updating");
-            day1Hi.setText("Updating");
-            day2Hi.setText("Updating");
-            day3Hi.setText("Updating");
-            day4Hi.setText("Updating");
-            Log.v("test", "High" + hiTemps.toString());
         }
 
-        Runnable runnable = new Runnable() {
-            public void run() {
-                HttpPost post;
-                Switch gpsSwitch = (Switch) findViewById(R.id.GPS);
-                if (gpsSwitch != null){
-                    if (gpsSwitch.isChecked()){
-                        //use latitude and longitude
-                        post = new HttpPost("http://api.openweathermap.org/data/2.5/weather?lat="+mCurrentLocation.getLatitude()+
-                                "&lon="+ mCurrentLocation.getLongitude()+"&units=imperial");
-                    }
-                    else{
-                        EditText editLocality = (EditText) findViewById(R.id.locality);
-                        String city = editLocality.getText().toString();
-                        if (city != null && !city.equals("")) {
-                            post = new HttpPost("http://api.openweathermap.org/data/2.5/weather?units=imperial&q="+city);
-                        }
-                        else{
-                            //Todo: No city, so notify user
-                            Log.v("test","No city given");
-                            return;
-                        }
-                    }
-                    Log.w("test", "Before HttpClient");
-                    DefaultHttpClient client = new DefaultHttpClient();
-                    Log.w("test", "httpclient is successfully made");
-
-                    StringEntity se = null;
-                    try {
-                        HttpResponse resp = client.execute(post);
-                        HttpEntity entity = resp.getEntity();
-                        String body = parseEntity(entity);
-                        try {
-                            JSONObject main = new JSONObject(body);
-                            //Get main temp
-                            currentTemp = getTemperature(main);
-
-
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
+            TextView day0Temp = (TextView) findViewById(R.id.day0);
+            TextView day1Temp = (TextView) findViewById(R.id.day1);
+            TextView day2Temp = (TextView) findViewById(R.id.day2);
+            TextView day3Temp = (TextView) findViewById(R.id.day3);
+            TextView day4Temp = (TextView) findViewById(R.id.day4);
+            day0Temp.setText(day0);
+            day1Temp.setText(day1);
+            day2Temp.setText(day2);
+            day3Temp.setText(day3);
+            day4Temp.setText(day4);
+            TextView day0Low = (TextView) findViewById(R.id.LoDay0);
+            TextView day1Low = (TextView) findViewById(R.id.LoDay1);
+            TextView day2Low = (TextView) findViewById(R.id.LoDay2);
+            TextView day3Low = (TextView) findViewById(R.id.LoDay3);
+            TextView day4Low = (TextView) findViewById(R.id.LoDay4);
+            if (!lowTemps.isEmpty() && lowTemps.size() >= 5) {
+                day0Low.setText(Math.round(lowTemps.get(0)) + "°");
+                day1Low.setText(Math.round(lowTemps.get(1)) + "°");
+                day2Low.setText(Math.round(lowTemps.get(2)) + "°");
+                day3Low.setText(Math.round(lowTemps.get(3)) + "°");
+                day4Low.setText(Math.round(lowTemps.get(4)) + "°");
+            } else {
+                day0Low.setText("Updating");
+                day1Low.setText("Updating");
+                day2Low.setText("Updating");
+                day3Low.setText("Updating");
+                day4Low.setText("Updating");
+                Log.v("test", "Low" + lowTemps.toString());
 
             }
-        };
+            TextView day0Hi = (TextView) findViewById(R.id.HiDay0);
+            TextView day1Hi = (TextView) findViewById(R.id.HiDay1);
+            TextView day2Hi = (TextView) findViewById(R.id.HiDay2);
+            TextView day3Hi = (TextView) findViewById(R.id.HiDay3);
+            TextView day4Hi = (TextView) findViewById(R.id.HiDay4);
+            if (!hiTemps.isEmpty() && hiTemps.size() >= 5) {
+                day0Hi.setText(Math.round(hiTemps.get(0)) + "°");
+                day1Hi.setText(Math.round(hiTemps.get(1)) + "°");
+                day2Hi.setText(Math.round(hiTemps.get(2)) + "°");
+                day3Hi.setText(Math.round(hiTemps.get(3)) + "°");
+                day4Hi.setText(Math.round(hiTemps.get(4)) + "°");
+            } else {
+                day0Hi.setText("Updating");
+                day1Hi.setText("Updating");
+                day2Hi.setText("Updating");
+                day3Hi.setText("Updating");
+                day4Hi.setText("Updating");
+                Log.v("test", "High" + hiTemps.toString());
+            }
 
-        new Thread(runnable).start();
-        TextView currentTempView = (TextView) findViewById(R.id.textView21);
-        if (currentTemp != null) {
-            currentTempView.setText(currentTemp.toString()+"° F");
+            Runnable runnable = new Runnable() {
+                public void run() {
+                    HttpPost post;
+                    Switch gpsSwitch = (Switch) findViewById(R.id.GPS);
+                    if (gpsSwitch != null) {
+                        if (gpsSwitch.isChecked()) {
+                            //use latitude and longitude
+                            post = new HttpPost("http://api.openweathermap.org/data/2.5/weather?lat=" + mCurrentLocation.getLatitude() +
+                                    "&lon=" + mCurrentLocation.getLongitude() + "&units=imperial");
+                        } else {
+                            EditText editLocality = (EditText) findViewById(R.id.locality);
+                            String city = editLocality.getText().toString();
+                            if (city != null && !city.equals("")) {
+                                post = new HttpPost("http://api.openweathermap.org/data/2.5/weather?units=imperial&q=" + city);
+                            } else {
+                                //Todo: No city, so notify user
+                                Log.v("test", "No city given");
+                                return;
+                            }
+                        }
+                        Log.w("test", "Before HttpClient");
+                        DefaultHttpClient client = new DefaultHttpClient();
+                        Log.w("test", "httpclient is successfully made");
+
+                        StringEntity se = null;
+                        try {
+                            HttpResponse resp = client.execute(post);
+                            HttpEntity entity = resp.getEntity();
+                            String body = parseEntity(entity);
+                            try {
+                                JSONObject main = new JSONObject(body);
+                                //Get main temp
+                                currentTemp = getTemperature(main);
+
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                }
+            };
+
+            new Thread(runnable).start();
+            TextView currentTempView = (TextView) findViewById(R.id.textView21);
+            if (currentTemp != null) {
+                currentTempView.setText(currentTemp.toString() + "° F");
+            } else {
+                currentTempView.setText("Updating");
+            }
         }
-        else {
-            currentTempView.setText("Updating");
-        }
-    }
 
     /*Called when green lights button is pressed*/
-    public void greenLightsOn(View view){
+
+    public void greenLightsOn(View view) {
         Runnable runnable = new Runnable() {
             public void run() {
 
                 EditText editIp = (EditText) findViewById(R.id.editText);
                 String ip_address = editIp.getText().toString();
                 HttpPost post;
-                if(ip_address.equals("")){
+                if (ip_address.equals("")) {
                     Log.w("test", "an ip address was not inputted");
                     post = new HttpPost("http://172.27.98.94/rpi");
-                }
-                else{
+                } else {
                     post = new HttpPost("http://" + ip_address + "/rpi");
                 }
 
@@ -660,7 +685,7 @@ public class MainActivity extends FragmentActivity implements
 //                    se = new StringEntity(jsonobj.toString());
                     se = new StringEntity("{\"lights\":[{\"intensity\":0.75,\"red\":0,\"blue\":0,\"green\":255,\"lightId\":1}],\"propagate\":true}");
                     se.setContentType("application/json;charset=UTF-8");
-                    se.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE,"application/json;charset=UTF-8"));
+                    se.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json;charset=UTF-8"));
                     Log.w("test", "JSON data is strigified");
                     Log.v("test", jsonobj.toString());
                 } catch (UnsupportedEncodingException e) {
@@ -669,7 +694,7 @@ public class MainActivity extends FragmentActivity implements
                 post.setEntity(se);
 
                 try {
-                  HttpResponse resp = client.execute(post);
+                    HttpResponse resp = client.execute(post);
 //                    client.execute(post);
 
                     Log.w("test", "POST data is sent to raspberry pi");
@@ -705,6 +730,31 @@ public class MainActivity extends FragmentActivity implements
         return super.onOptionsItemSelected(item);
 
 
+    }
+
+    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView bmImage;
+
+        public DownloadImageTask(ImageView bmImage) {
+            this.bmImage = bmImage;
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap mIcon11 = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                mIcon11 = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+            return mIcon11;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            bmImage.setImageBitmap(result);
+        }
     }
 
 
