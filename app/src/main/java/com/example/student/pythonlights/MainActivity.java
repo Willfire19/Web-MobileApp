@@ -422,6 +422,9 @@ public class MainActivity extends FragmentActivity implements
                             String day3Icon = day3W.getString("icon");
                             String day4Icon = day4W.getString("icon");
 
+
+                            popTemperatures(main);
+
                             new DownloadImageTask((ImageView) findViewById(R.id.imageDay0))
                                     .execute("http://openweathermap.org/img/w/" + day0Icon + ".png");
 
@@ -440,7 +443,7 @@ public class MainActivity extends FragmentActivity implements
                             //Get 2 day lowTemps
 //                            lowTemps = getTemperatures(main);
 
-                            popTemperatures(main);
+
 
 //                            Log.v("test", lowTemps.toString());
 
