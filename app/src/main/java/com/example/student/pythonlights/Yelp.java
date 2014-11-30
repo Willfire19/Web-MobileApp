@@ -22,6 +22,9 @@ public class Yelp {
     OAuthService service;
     Token accessToken;
 
+    String[] outdoor = {"park","hike","Farmers Market"};
+    String[] indoor = {"theater","cafe","bar","restaurant"};
+
     public static Yelp getYelp(Context context) {
         return new Yelp(context.getString(R.string.consumer_key), context.getString(R.string.consumer_secret),
                 context.getString(R.string.token), context.getString(R.string.token_secret));
@@ -86,5 +89,18 @@ public class Yelp {
         String response = yelp.search("burritos", 30.361471, -87.164326);
 
         System.out.println(response);
+
+        boolean rainy = true;
+        // If weather is rainy or chance of precipitation
+        if (rainy){
+            for (int i = 0; i < yelp.indoor.length; i++){
+                String options = yelp.search(yelp.indoor[i],30.361471, -87.164326);
+            }
+        }
+        else{
+            for (int i = 0; i < yelp.outdoor.length; i++){
+                String options = yelp.search(yelp.outdoor[i],30.361471, -87.164326);
+            }
+        }
     }
 }

@@ -53,6 +53,7 @@ public class MainActivity extends FragmentActivity implements
     public static final String EXTRA_MESSAGE = "blah";
     public static boolean isConnected = false;
 
+
     // Global constants
     /*
      * Define a request code to send to Google Play services
