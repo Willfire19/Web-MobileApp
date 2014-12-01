@@ -410,12 +410,12 @@ public class MainActivity extends FragmentActivity implements
                         try {
                             JSONObject json = new JSONObject(body);
                             JSONArray main = json.getJSONArray("list");
-                            JSONArray weather = json.getJSONArray("weather");
-                            JSONObject day0W = weather.getJSONObject(0);
-                            JSONObject day1W = weather.getJSONObject(1);
-                            JSONObject day2W = weather.getJSONObject(2);
-                            JSONObject day3W = weather.getJSONObject(3);
-                            JSONObject day4W = weather.getJSONObject(4);
+                            popTemperatures(main);
+                            JSONObject day0W = main.getJSONObject(0);
+                            JSONObject day1W = main.getJSONObject(1);
+                            JSONObject day2W = main.getJSONObject(2);
+                            JSONObject day3W = main.getJSONObject(3);
+                            JSONObject day4W = main.getJSONObject(4);
                             String day0Icon = day0W.getString("icon");
                             String day1Icon = day1W.getString("icon");
                             String day2Icon = day2W.getString("icon");
@@ -423,7 +423,6 @@ public class MainActivity extends FragmentActivity implements
                             String day4Icon = day4W.getString("icon");
 
 
-                            popTemperatures(main);
 
                             new DownloadImageTask((ImageView) findViewById(R.id.imageDay0))
                                     .execute("http://openweathermap.org/img/w/" + day0Icon + ".png");
