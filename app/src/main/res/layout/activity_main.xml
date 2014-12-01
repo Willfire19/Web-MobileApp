@@ -59,10 +59,11 @@
 
     <TableLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/updateWeather"
         android:layout_alignRight="@+id/button"
-        android:layout_alignEnd="@+id/button">
+        android:layout_alignEnd="@+id/button"
+        android:id="@+id/tableLayout">
 
         <TableRow
             android:layout_width="fill_parent"
@@ -73,7 +74,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="55° F"
-                android:id="@+id/textView21" />
+                android:id="@+id/textView21"
+                android:textSize="30dp"/>
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -93,20 +95,27 @@
                 android:layout_height="wrap_content"
                 android:text="Hi"
                 android:id="@+id/textView22"
-                android:layout_column="2" />
+                android:layout_column="2"
+                android:textSize="30dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Lo"
                 android:id="@+id/textView23"
-                android:layout_column="3" />
+                android:layout_column="3"
+                android:textSize="30dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/textView24"
-                android:layout_column="4" />
+                android:layout_column="4"
+                android:textSize="30dp" />
 
         </TableRow>
 
@@ -120,19 +129,22 @@
                 android:layout_height="wrap_content"
                 android:text="Monday"
                 android:id="@+id/day0"
-                android:layout_column="0" />
+                android:layout_column="0"
+                android:textSize="30dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/HiDay0"
-                android:layout_column="2" />
+                android:layout_column="2"
+                android:textSize="30dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/LoDay0"
-                android:layout_column="3" />
+                android:layout_column="3"
+                android:textSize="30dp" />
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -152,19 +164,22 @@
                 android:layout_height="wrap_content"
                 android:text="Tuesday"
                 android:id="@+id/day1"
-                android:layout_column="0" />
+                android:layout_column="0"
+                android:textSize="30dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/HiDay1"
-                android:layout_column="2" />
+                android:layout_column="2"
+                android:textSize="30dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/LoDay1"
-                android:layout_column="3" />
+                android:layout_column="3"
+                android:textSize="30dp" />
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -183,19 +198,22 @@
                 android:layout_height="wrap_content"
                 android:text="Wednesday"
                 android:id="@+id/day2"
-                android:layout_column="0" />
+                android:layout_column="0"
+                android:textSize="30dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/HiDay2"
-                android:layout_column="2" />
+                android:layout_column="2"
+                android:textSize="30dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/LoDay2"
-                android:layout_column="3" />
+                android:layout_column="3"
+                android:textSize="30dp" />
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -214,13 +232,15 @@
                 android:layout_height="wrap_content"
                 android:text="Thursday"
                 android:id="@+id/day3"
-                android:layout_column="0" />
+                android:layout_column="0"
+                android:textSize="30dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/HiDay3"
-                android:layout_column="2" />
+                android:layout_column="2"
+                android:textSize="30dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -244,19 +264,22 @@
                 android:layout_height="wrap_content"
                 android:text="Friday"
                 android:id="@+id/day4"
-                android:layout_column="0" />
+                android:layout_column="0"
+                android:textSize="30dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/HiDay4"
-                android:layout_column="2" />
+                android:layout_column="2"
+                android:textSize="30dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/LoDay4"
-                android:layout_column="3" />
+                android:layout_column="3"
+                android:textSize="30dp" />
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -266,6 +289,53 @@
 
         </TableRow>
 
+    </TableLayout>
+
+    <TableLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/tableLayout"
+        android:layout_toLeftOf="@+id/button"
+        android:layout_toStartOf="@+id/button"
+        android:layout_marginTop="50dp">
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_below="@+id/tableLayout"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Attraction"
+                android:id="@+id/attractionTitle"
+                android:layout_column="0"
+                android:textSize="30dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Type"
+                android:id="@+id/typeTitle"
+                android:layout_column="1"
+                android:textSize="30dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Distance"
+                android:id="@+id/distanceTitle"
+                android:layout_column="2"
+                android:textSize="30dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp" />
+        </TableRow>
     </TableLayout>
 
 

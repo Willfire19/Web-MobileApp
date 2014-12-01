@@ -382,6 +382,31 @@ public class MainActivity extends FragmentActivity implements
             public void run() {
                 HttpPost post;
                 Switch gpsSwitch = (Switch) findViewById(R.id.GPS);
+
+                String consumerKey = "0VJ2QVBQYJqEBqNZ_0g6Xg";
+                String consumerSecret = "oI4ReNB4OsjHYCnczq4J9_3HLQ8";
+                String token = "_DUpeCYJqwWUjlXijdFIpNKvpQjAA_CV";
+                    String tokenSecret = "ljnwwyEaVkZyyuaR5fCket9RWyw";
+
+                Yelp yelp = new Yelp(consumerKey, consumerSecret, token, tokenSecret);
+                String response = yelp.search("burritos", 30.361471, -87.164326);
+
+                System.out.println("This is the API call");
+                System.out.println(response);
+
+                boolean rainy = true;
+                // If weather is rainy or chance of precipitation
+                if (rainy){
+                    for (int i = 0; i < yelp.indoor.length; i++){
+                        String options = yelp.search(yelp.indoor[i],30.361471, -87.164326);
+                    }
+                }
+                else{
+                    for (int i = 0; i < yelp.outdoor.length; i++){
+                        String options = yelp.search(yelp.outdoor[i],30.361471, -87.164326);
+                    }
+                }
+
                 if (gpsSwitch != null) {
                     if (gpsSwitch.isChecked()) {
                         //use latitude and longitude
@@ -407,10 +432,13 @@ public class MainActivity extends FragmentActivity implements
                         HttpResponse resp = client.execute(post);
                         HttpEntity entity = resp.getEntity();
                         String body = parseEntity(entity);
+
                         try {
                             JSONObject json = new JSONObject(body);
                             JSONArray main = json.getJSONArray("list");
+                            popTemperatures(main);
                             JSONArray weather = json.getJSONArray("weather");
+                            System.out.println(weather.toString());
                             JSONObject day0W = weather.getJSONObject(0);
                             JSONObject day1W = weather.getJSONObject(1);
                             JSONObject day2W = weather.getJSONObject(2);
@@ -423,22 +451,21 @@ public class MainActivity extends FragmentActivity implements
                             String day4Icon = day4W.getString("icon");
 
 
-                            popTemperatures(main);
 
-                            new DownloadImageTask((ImageView) findViewById(R.id.imageDay0))
-                                    .execute("http://openweathermap.org/img/w/" + day0Icon + ".png");
-
-                            new DownloadImageTask((ImageView) findViewById(R.id.imageDay1))
-                                    .execute("http://openweathermap.org/img/w/" + day1Icon + ".png");
-
-                            new DownloadImageTask((ImageView) findViewById(R.id.imageDay2))
-                                    .execute("http://openweathermap.org/img/w/" + day2Icon + ".png");
-
-                            new DownloadImageTask((ImageView) findViewById(R.id.imageDay3))
-                                    .execute("http://openweathermap.org/img/w/" + day3Icon + ".png");
-
-                            new DownloadImageTask((ImageView) findViewById(R.id.imageDay4))
-                                    .execute("http://openweathermap.org/img/w/" + day4Icon + ".png");
+//                            new DownloadImageTask((ImageView) findViewById(R.id.imageDay0))
+//                                    .execute("http://openweathermap.org/img/w/" + day0Icon + ".png");
+//
+//                            new DownloadImageTask((ImageView) findViewById(R.id.imageDay1))
+//                                    .execute("http://openweathermap.org/img/w/" + day1Icon + ".png");
+//
+//                            new DownloadImageTask((ImageView) findViewById(R.id.imageDay2))
+//                                    .execute("http://openweathermap.org/img/w/" + day2Icon + ".png");
+//
+//                            new DownloadImageTask((ImageView) findViewById(R.id.imageDay3))
+//                                    .execute("http://openweathermap.org/img/w/" + day3Icon + ".png");
+//
+//                            new DownloadImageTask((ImageView) findViewById(R.id.imageDay4))
+//                                    .execute("http://openweathermap.org/img/w/" + day4Icon + ".png");
 
                             //Get 2 day lowTemps
 //                            lowTemps = getTemperatures(main);
@@ -461,6 +488,7 @@ public class MainActivity extends FragmentActivity implements
         };
 
         new Thread(getForecast).start();
+
         Calendar calendar = Calendar.getInstance();
         int day = calendar.get(Calendar.DAY_OF_WEEK);
         String day0 = "";
