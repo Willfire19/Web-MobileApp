@@ -41,6 +41,7 @@ import com.google.android.gms.location.LocationClient;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -465,6 +466,8 @@ public class MainActivity extends FragmentActivity implements
         try {
             for (int i = 0; i < body.length(); i++) {
                 JSONObject mainVal = body.getJSONObject(i);
+                Log.v("test", mainVal.toString());
+                Log.v("test", mainVal.getString("title"));
                 //JSONObject Objtitles = mainVal.getJSONObject("title");
                 tempMovies.add(mainVal.getString("title"));
             }
@@ -488,8 +491,10 @@ public class MainActivity extends FragmentActivity implements
                     HttpResponse resp = client.execute(post);
                     HttpEntity entity = resp.getEntity();
                     String body = parseEntity(entity);
+                    Log.v("test", body);
                     try {
                         JSONObject json = new JSONObject(body);
+                        Log.v("test", json.toString());
                         JSONArray main = json.getJSONArray("movies");
                         getMoviesFromJsonArray(main);
                     }
@@ -505,6 +510,13 @@ public class MainActivity extends FragmentActivity implements
         };
 
         new Thread(getMovies).start();
+        TextView movieTitle = (TextView) findViewById(R.id.textView21);
+        if (!movies.isEmpty()) {
+            movieTitle.setText(movies.get(0));
+        } else {
+            movieTitle.setText("Updating");
+
+        }
 
     }
 
@@ -761,59 +773,96 @@ public class MainActivity extends FragmentActivity implements
                 Log.v("test", "High" + hiTemps.toString());
             }
 
-            Runnable runnable = new Runnable() {
-                public void run() {
-                    HttpPost post;
-                    Switch gpsSwitch = (Switch) findViewById(R.id.GPS);
-                    if (gpsSwitch != null) {
-                        if (gpsSwitch.isChecked()) {
-                            //use latitude and longitude
-                            post = new HttpPost("http://api.openweathermap.org/data/2.5/weather?lat=" + mCurrentLocation.getLatitude() +
-                                    "&lon=" + mCurrentLocation.getLongitude() + "&units=imperial");
-                        } else {
-                            EditText editLocality = (EditText) findViewById(R.id.locality);
-                            String city = editLocality.getText().toString();
-                            if (city != null && !city.equals("")) {
-                                post = new HttpPost("http://api.openweathermap.org/data/2.5/weather?units=imperial&q=" + city);
-                            } else {
-                                //Todo: No city, so notify user
-                                Log.v("test", "No city given");
-                                return;
-                            }
-                        }
-                        Log.w("test", "Before HttpClient");
-                        DefaultHttpClient client = new DefaultHttpClient();
-                        Log.w("test", "httpclient is successfully made");
+//            Runnable runnable = new Runnable() {
+//                public void run() {
+//                    HttpPost post;
+//                    Switch gpsSwitch = (Switch) findViewById(R.id.GPS);
+//                    if (gpsSwitch != null) {
+//                        if (gpsSwitch.isChecked()) {
+//                            //use latitude and longitude
+//                            post = new HttpPost("http://api.openweathermap.org/data/2.5/weather?lat=" + mCurrentLocation.getLatitude() +
+//                                    "&lon=" + mCurrentLocation.getLongitude() + "&units=imperial");
+//                        } else {
+//                            EditText editLocality = (EditText) findViewById(R.id.locality);
+//                            String city = editLocality.getText().toString();
+//                            if (city != null && !city.equals("")) {
+//                                post = new HttpPost("http://api.openweathermap.org/data/2.5/weather?units=imperial&q=" + city);
+//                            } else {
+//                                //Todo: No city, so notify user
+//                                Log.v("test", "No city given");
+//                                return;
+//                            }
+//                        }
+//                        Log.w("test", "Before HttpClient");
+//                        DefaultHttpClient client = new DefaultHttpClient();
+//                        Log.w("test", "httpclient is successfully made");
+//
+//                        StringEntity se = null;
+//                        try {
+//                            HttpResponse resp = client.execute(post);
+//                            HttpEntity entity = resp.getEntity();
+//                            String body = parseEntity(entity);
+//                            try {
+//                                JSONObject main = new JSONObject(body);
+//                                //Get main temp
+//                                currentTemp = getTemperature(main);
+//
+//
+//                            } catch (JSONException e) {
+//                                e.printStackTrace();
+//                            }
+//
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//
+//                }
+//            };
+//
+//            new Thread(runnable).start();
+//            TextView currentTempView = (TextView) findViewById(R.id.textView21);
+//            if (currentTemp != null) {
+//                currentTempView.setText(currentTemp.toString() + "° F");
+//            } else {
+//                currentTempView.setText("Updating");
+//            }
 
-                        StringEntity se = null;
+            Runnable getMovies = new Runnable() {
+                public void run(){
+                    String apikey = "a8hp9y82qahh6hsbq72xtpn3";
+                    HttpGet post = new HttpGet("http://api.rottentomatoes.com/api/public/v1.0/lists/movies/in_theaters.json?apikey="+apikey+"&page_limit=1");
+                    DefaultHttpClient client = new DefaultHttpClient();
+                    StringEntity se = null;
+                    try {
+                        HttpResponse resp = client.execute(post);
+                        HttpEntity entity = resp.getEntity();
+                        String body = parseEntity(entity);
+                        Log.v("test", body);
                         try {
-                            HttpResponse resp = client.execute(post);
-                            HttpEntity entity = resp.getEntity();
-                            String body = parseEntity(entity);
-                            try {
-                                JSONObject main = new JSONObject(body);
-                                //Get main temp
-                                currentTemp = getTemperature(main);
-
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                            JSONObject json = new JSONObject(body);
+                            Log.v("test", json.toString());
+                            JSONArray main = json.getJSONArray("movies");
+                            getMoviesFromJsonArray(main);
                         }
+                        catch (JSONException j){
+                            j.printStackTrace();
+                        }
+                    }
+                    catch (IOException e) {
+                        e.printStackTrace();
                     }
 
                 }
             };
 
-            new Thread(runnable).start();
-            TextView currentTempView = (TextView) findViewById(R.id.textView21);
-            if (currentTemp != null) {
-                currentTempView.setText(currentTemp.toString() + "° F");
+            new Thread(getMovies).start();
+            TextView movieTitle = (TextView) findViewById(R.id.textView21);
+            if (!movies.isEmpty()) {
+                movieTitle.setText(movies.get(0));
             } else {
-                currentTempView.setText("Updating");
+                movieTitle.setText("Updating");
+
             }
         }
 
