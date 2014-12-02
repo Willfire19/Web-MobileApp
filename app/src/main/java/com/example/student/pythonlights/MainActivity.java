@@ -410,11 +410,37 @@ public class MainActivity extends FragmentActivity implements
                         try {
                             JSONObject json = new JSONObject(body);
                             JSONArray main = json.getJSONArray("list");
+                            popTemperatures(main);
+
+                            String[] outdoor = {"park","hike","Farmers Market"};
+                            String[] indoor = {"theater","cafe","bar","restaurant"};
+                            String consumerKey = "0VJ2QVBQYJqEBqNZ_0g6Xg";
+                            String consumerSecret = "oI4ReNB4OsjHYCnczq4J9_3HLQ8";
+                            String token = "_DUpeCYJqwWUjlXijdFIpNKvpQjAA_CV";
+                            String tokenSecret = "ljnwwyEaVkZyyuaR5fCket9RWyw";
+
+                            Yelp yelp = new Yelp(consumerKey, consumerSecret, token, tokenSecret);
+                            String response = yelp.search("burritos", 30.361471, -87.164326);
+
+                            System.out.println(response);
+                            boolean rainy = true;
+                            // If weather is rainy or chance of precipitation
+                                    if (rainy){
+                                    for (int i = 0; i < yelp.indoor.length; i++){
+                                            String options = yelp.search(yelp.indoor[i],30.361471, -87.164326);
+                                        }
+                                }
+                            else{
+                                    for (int i = 0; i < yelp.outdoor.length; i++){
+                                            String options = yelp.search(yelp.outdoor[i],30.361471, -87.164326);
+                                        }
+                                }
+
                             JSONArray weather = json.getJSONArray("weather");
-                            JSONObject day0W = weather.getJSONObject(0);
-                            JSONObject day1W = weather.getJSONObject(1);
-                            JSONObject day2W = weather.getJSONObject(2);
-                            JSONObject day3W = weather.getJSONObject(3);
+                            JSONObject day0W = main.getJSONObject(0);
+                            JSONObject day1W = main.getJSONObject(1);
+                            JSONObject day2W = main.getJSONObject(2);
+                            JSONObject day3W = main.getJSONObject(3);
                             JSONObject day4W = weather.getJSONObject(4);
                             String day0Icon = day0W.getString("icon");
                             String day1Icon = day1W.getString("icon");
@@ -423,7 +449,6 @@ public class MainActivity extends FragmentActivity implements
                             String day4Icon = day4W.getString("icon");
 
 
-                            popTemperatures(main);
 
                             new DownloadImageTask((ImageView) findViewById(R.id.imageDay0))
                                     .execute("http://openweathermap.org/img/w/" + day0Icon + ".png");
