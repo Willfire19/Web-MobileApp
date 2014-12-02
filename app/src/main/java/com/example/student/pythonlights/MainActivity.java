@@ -589,27 +589,20 @@ public class MainActivity extends FragmentActivity implements
                             System.out.println(day3Icon);
                             System.out.println(day4Icon);
 
-                            new DownloadImageTask((ImageView) findViewById(R.id.imageDay0))
-                                    .execute("http://openweathermap.org/img/w/" + day0Icon + ".png");
-
-                            new DownloadImageTask((ImageView) findViewById(R.id.imageDay1))
-                                    .execute("http://openweathermap.org/img/w/" + day1Icon + ".png");
-
-                            new DownloadImageTask((ImageView) findViewById(R.id.imageDay2))
-                                    .execute("http://openweathermap.org/img/w/" + day2Icon + ".png");
-
-                            new DownloadImageTask((ImageView) findViewById(R.id.imageDay3))
-                                    .execute("http://openweathermap.org/img/w/" + day3Icon + ".png");
-
-                            new DownloadImageTask((ImageView) findViewById(R.id.imageDay4))
-                                    .execute("http://openweathermap.org/img/w/" + day4Icon + ".png");
-
-                            //Get 2 day lowTemps
-//                            lowTemps = getTemperatures(main);
-
-
-
-//                            Log.v("test", lowTemps.toString());
+//                            new DownloadImageTask((ImageView) findViewById(R.id.imageDay0))
+//                                    .execute("http://openweathermap.org/img/w/" + day0Icon + ".png");
+//
+//                            new DownloadImageTask((ImageView) findViewById(R.id.imageDay1))
+//                                    .execute("http://openweathermap.org/img/w/" + day1Icon + ".png");
+//
+//                            new DownloadImageTask((ImageView) findViewById(R.id.imageDay2))
+//                                    .execute("http://openweathermap.org/img/w/" + day2Icon + ".png");
+//
+//                            new DownloadImageTask((ImageView) findViewById(R.id.imageDay3))
+//                                    .execute("http://openweathermap.org/img/w/" + day3Icon + ".png");
+//
+//                            new DownloadImageTask((ImageView) findViewById(R.id.imageDay4))
+//                                    .execute("http://openweathermap.org/img/w/" + day4Icon + ".png");
 
 
                         } catch (JSONException e) {
