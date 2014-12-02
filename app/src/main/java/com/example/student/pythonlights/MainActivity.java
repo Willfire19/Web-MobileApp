@@ -74,6 +74,7 @@ public class MainActivity extends FragmentActivity implements
     Double currentTemp;
     ArrayList<Double> lowTemps = new ArrayList<Double>();
     ArrayList<Double> hiTemps = new ArrayList<Double>();
+    ArrayList<String> movies = new ArrayList<String>();
 
 
     /*
@@ -374,6 +375,55 @@ public class MainActivity extends FragmentActivity implements
 //            return -1;
         }
 //        return temps;
+    }
+
+    public void getMoviesFromJsonArray(JSONArray body) {
+        ArrayList<String> tempMovies = new ArrayList<String>();
+
+        try {
+            for (int i = 0; i < body.length(); i++) {
+                JSONObject mainVal = body.getJSONObject(i);
+                //JSONObject Objtitles = mainVal.getJSONObject("title");
+                tempMovies.add(mainVal.getString("title"));
+            }
+            movies = tempMovies;
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /*Called when update movies*/
+    public void updateMovies(View view) {
+        Runnable getMovies = new Runnable() {
+            public void run(){
+                String apikey = "a8hp9y82qahh6hsbq72xtpn3";
+                HttpPost post = new HttpPost("http://api.rottentomatoes.com/api/public/v1.0/lists/movies/in_theaters.json?apikey="+apikey+"&page_limit=1");
+                DefaultHttpClient client = new DefaultHttpClient();
+                StringEntity se = null;
+                try {
+                    HttpResponse resp = client.execute(post);
+                    HttpEntity entity = resp.getEntity();
+                    String body = parseEntity(entity);
+                    try {
+                        JSONObject json = new JSONObject(body);
+                        JSONArray main = json.getJSONArray("movies");
+                        getMoviesFromJsonArray(main);
+                    }
+                    catch (JSONException j){
+                        j.printStackTrace();
+                    }
+                }
+                catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        };
+
+        new Thread(getMovies).start();
+
     }
 
     /*Called when update weather*/
