@@ -376,6 +376,85 @@ public class MainActivity extends FragmentActivity implements
 //        return temps;
     }
 
+    public void sendWeatherLights(String ipAddress,boolean sunny){
+        HttpPost post = new HttpPost("http://" + ipAddress + "/rpi");
+        Log.w("test", "Before HttpClient");
+        if (!sunny){
+            for(int i = 0; i < 16; i ++){
+                DefaultHttpClient client = new DefaultHttpClient();
+                String lightString = "";
+                for (int j = 1; j < 30; j += 2){
+                    if((j -1) % 4 != 2){
+                        // Blue
+                        if (i % 2 == 0){
+                            lightString += "{\"intensity\":0.75,\"red\":0,\"blue\":255,\"green\":0,\"lightId\":"+j%32+"},";
+                            Log.w("test", j+","+j%32+",Blue");
+                        }
+                        else{
+                            lightString += "{\"intensity\":0.75,\"red\":255,\"blue\":255,\"green\":255,\"lightId\":"+j%32+"},";
+                            Log.w("test", j+","+j%32+",White");
+                        }
+
+                    }
+                    else{
+                        //White
+                        if (i % 2 == 1){
+                            lightString += "{\"intensity\":0.75,\"red\":0,\"blue\":255,\"green\":0,\"lightId\":"+j%32+"},";
+                            Log.w("test", j+","+j%32+",Blue");
+                        }
+                        else{
+                            lightString += "{\"intensity\":0.75,\"red\":255,\"blue\":255,\"green\":255,\"lightId\":"+j%32+"},";
+                            Log.w("test", j+","+j%32+",White");
+                        }
+                        Log.w("test", ""+j%32);
+                    }
+                }
+                lightString = lightString.substring(0,lightString.length()-1);
+                Log.v("test",lightString);
+                StringEntity se = null;
+                try {
+                    se = new StringEntity("{\"lights\":["+lightString+"],\"propagate\":true}");
+                    se.setContentType("application/json;charset=UTF-8");
+                    se.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json;charset=UTF-8"));
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                post.setEntity(se);
+
+                try {
+                    HttpResponse resp = client.execute(post);
+                    resp.getEntity();
+                    client.getConnectionManager().shutdown();
+                    Log.w("test", "POST data is sent to raspberry pi");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        else{
+            DefaultHttpClient client = new DefaultHttpClient();
+            StringEntity se = null;
+            try {
+                se = new StringEntity("{\"lights\":["+"{\"intensity\":0.75,\"red\":255,\"blue\":0,\"green\":102,\"lightId\":1}"+"],\"propagate\":true}");
+                se.setContentType("application/json;charset=UTF-8");
+                se.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json;charset=UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            post.setEntity(se);
+
+            try {
+                HttpResponse resp = client.execute(post);
+                resp.getEntity();
+                client.getConnectionManager().shutdown();
+                Log.w("test", "POST data is sent to raspberry pi");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
     /*Called when update weather*/
     public void updateWeather(View view) {
         Runnable getForecast = new Runnable() {
@@ -419,30 +498,15 @@ public class MainActivity extends FragmentActivity implements
                             String token = "_DUpeCYJqwWUjlXijdFIpNKvpQjAA_CV";
                             String tokenSecret = "ljnwwyEaVkZyyuaR5fCket9RWyw";
 
-                            Yelp yelp = new Yelp(consumerKey, consumerSecret, token, tokenSecret);
-                            String response = yelp.search("burritos", 30.361471, -87.164326);
-
-                            System.out.println(response);
-                            boolean rainy = true;
-                            // If weather is rainy or chance of precipitation
-                                    if (rainy){
-                                    for (int i = 0; i < yelp.indoor.length; i++){
-                                            String options = yelp.search(yelp.indoor[i],30.361471, -87.164326);
-                                        }
-                                }
-                            else{
-                                    for (int i = 0; i < yelp.outdoor.length; i++){
-                                            String options = yelp.search(yelp.outdoor[i],30.361471, -87.164326);
-                                        }
-                                }
-
                             JSONArray weather = json.getJSONArray("weather");
+                            System.out.println("Got here");
                             JSONObject day0W = main.getJSONObject(0);
                             JSONObject day1W = main.getJSONObject(1);
                             JSONObject day2W = main.getJSONObject(2);
                             JSONObject day3W = main.getJSONObject(3);
                             JSONObject day4W = weather.getJSONObject(4);
                             String day0Icon = day0W.getString("icon");
+                            System.out.println(day0Icon);
                             String day1Icon = day1W.getString("icon");
                             String day2Icon = day2W.getString("icon");
                             String day3Icon = day3W.getString("icon");
@@ -486,7 +550,26 @@ public class MainActivity extends FragmentActivity implements
         };
 
         new Thread(getForecast).start();
-        Calendar calendar = Calendar.getInstance();
+        //Now update lights
+        Runnable updateLights = new Runnable() {
+            public void run() {
+                EditText editIp = (EditText) findViewById(R.id.editText);
+                String ip_address = editIp.getText().toString();
+                if (ip_address.equals("") || ip_address.equals("ip Address")) {
+                    Log.w("test", "an ip address was not inputted");
+                    sendWeatherLights("172.27.98.94",false);
+                } else {
+
+                    sendWeatherLights(ip_address,false);
+                }
+
+
+            }
+        };
+        new Thread(updateLights).start();
+
+
+                Calendar calendar = Calendar.getInstance();
         int day = calendar.get(Calendar.DAY_OF_WEEK);
         String day0 = "";
         String day1 = "";
@@ -667,7 +750,7 @@ public class MainActivity extends FragmentActivity implements
                 EditText editIp = (EditText) findViewById(R.id.editText);
                 String ip_address = editIp.getText().toString();
                 HttpPost post;
-                if (ip_address.equals("")) {
+                if (ip_address.equals("") || ip_address.equals("ip Address")) {
                     Log.w("test", "an ip address was not inputted");
                     post = new HttpPost("http://172.27.98.94/rpi");
                 } else {
