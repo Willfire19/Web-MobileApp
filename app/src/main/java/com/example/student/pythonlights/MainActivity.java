@@ -486,19 +486,29 @@ public class MainActivity extends FragmentActivity implements
                                         }
                                 }
 
-                            JSONArray weather = json.getJSONArray("weather");
-                            JSONObject day0W = main.getJSONObject(0);
-                            JSONObject day1W = main.getJSONObject(1);
-                            JSONObject day2W = main.getJSONObject(2);
-                            JSONObject day3W = main.getJSONObject(3);
-                            JSONObject day4W = weather.getJSONObject(4);
+                            JSONObject day0W = (main.getJSONObject(0)).getJSONArray("weather").getJSONObject(0);
+                            JSONObject day1W = (main.getJSONObject(1)).getJSONArray("weather").getJSONObject(0);
+                            JSONObject day2W = (main.getJSONObject(2)).getJSONArray("weather").getJSONObject(0);
+                            JSONObject day3W = (main.getJSONObject(3)).getJSONArray("weather").getJSONObject(0);
+                            JSONObject day4W = (main.getJSONObject(4)).getJSONArray("weather").getJSONObject(0);
+
+                            System.out.println(day0W);
+                            System.out.println(day1W);
+                            System.out.println(day2W);
+                            System.out.println(day3W);
+                            System.out.println(day4W);
+
                             String day0Icon = day0W.getString("icon");
                             String day1Icon = day1W.getString("icon");
                             String day2Icon = day2W.getString("icon");
                             String day3Icon = day3W.getString("icon");
                             String day4Icon = day4W.getString("icon");
 
-
+                            System.out.println(day0Icon);
+                            System.out.println(day1Icon);
+                            System.out.println(day2Icon);
+                            System.out.println(day3Icon);
+                            System.out.println(day4Icon);
 
                             new DownloadImageTask((ImageView) findViewById(R.id.imageDay0))
                                     .execute("http://openweathermap.org/img/w/" + day0Icon + ".png");
