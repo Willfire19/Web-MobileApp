@@ -75,6 +75,7 @@ public class MainActivity extends FragmentActivity implements
     ArrayList<Double> lowTemps = new ArrayList<Double>();
     ArrayList<Double> hiTemps = new ArrayList<Double>();
     ArrayList<String> movies = new ArrayList<String>();
+    String currentWeather = "";
 
 
     /*
@@ -380,7 +381,9 @@ public class MainActivity extends FragmentActivity implements
     public void sendWeatherLights(String ipAddress,boolean sunny){
         HttpPost post = new HttpPost("http://" + ipAddress + "/rpi");
         Log.w("test", "Before HttpClient");
+        System.out.println(sunny);
         if (!sunny){
+
             for(int i = 0; i < 16; i ++){
                 DefaultHttpClient client = new DefaultHttpClient();
                 String lightString = "";
@@ -395,7 +398,6 @@ public class MainActivity extends FragmentActivity implements
                             lightString += "{\"intensity\":0.75,\"red\":255,\"blue\":255,\"green\":255,\"lightId\":"+j%32+"},";
                             Log.w("test", j+","+j%32+",White");
                         }
-
                     }
                     else{
                         //White
@@ -410,8 +412,8 @@ public class MainActivity extends FragmentActivity implements
                         Log.w("test", ""+j%32);
                     }
                 }
-                lightString = lightString.substring(0,lightString.length()-1);
                 Log.v("test",lightString);
+                lightString = lightString.substring(0,lightString.length()-1);
                 StringEntity se = null;
                 try {
                     se = new StringEntity("{\"lights\":["+lightString+"],\"propagate\":true}");
@@ -433,6 +435,7 @@ public class MainActivity extends FragmentActivity implements
             }
         }
         else{
+            System.out.println("I got here and it was still" + sunny);
             DefaultHttpClient client = new DefaultHttpClient();
             StringEntity se = null;
             try {
@@ -577,6 +580,8 @@ public class MainActivity extends FragmentActivity implements
                             System.out.println(day3W);
                             System.out.println(day4W);
 
+                            currentWeather = day0W.getString("main");
+                            System.out.println(currentWeather);
                             String day0Icon = day0W.getString("icon");
                             String day1Icon = day1W.getString("icon");
                             String day2Icon = day2W.getString("icon");
@@ -623,12 +628,15 @@ public class MainActivity extends FragmentActivity implements
             public void run() {
                 EditText editIp = (EditText) findViewById(R.id.editText);
                 String ip_address = editIp.getText().toString();
+                System.out.println(currentWeather);
+                boolean weatherStatus = currentWeather.equals("") || currentWeather.equals("Clear");
+                System.out.println(weatherStatus);
                 if (ip_address.equals("") || ip_address.equals("ip Address")) {
                     Log.w("test", "an ip address was not inputted");
-                    sendWeatherLights("172.27.98.94",false);
+                    sendWeatherLights("172.27.98.94",weatherStatus);
                 } else {
 
-                    sendWeatherLights(ip_address,false);
+                    sendWeatherLights(ip_address,weatherStatus);
                 }
 
 
@@ -818,6 +826,7 @@ public class MainActivity extends FragmentActivity implements
                 EditText editIp = (EditText) findViewById(R.id.editText);
                 String ip_address = editIp.getText().toString();
                 HttpPost post;
+                Log.v("test",currentWeather);
                 if (ip_address.equals("")) {
                     Log.w("test", "an ip address was not inputted");
                     post = new HttpPost("http://172.27.98.94/rpi");
