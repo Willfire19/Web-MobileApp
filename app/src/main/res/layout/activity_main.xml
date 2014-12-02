@@ -246,7 +246,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/LoDay3"
-                android:layout_column="3" />
+                android:layout_column="3"
+                android:textIsSelectable="false"
+                android:textSize="30dp" />
 
             <ImageView
                 android:layout_width="wrap_content"

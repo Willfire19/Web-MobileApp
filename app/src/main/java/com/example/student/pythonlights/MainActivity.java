@@ -74,6 +74,7 @@ public class MainActivity extends FragmentActivity implements
     Double currentTemp;
     ArrayList<Double> lowTemps = new ArrayList<Double>();
     ArrayList<Double> hiTemps = new ArrayList<Double>();
+    ArrayList<String> movies = new ArrayList<String>();
 
 
     /*
@@ -455,6 +456,55 @@ public class MainActivity extends FragmentActivity implements
 
     }
 
+    public void getMoviesFromJsonArray(JSONArray body) {
+        ArrayList<String> tempMovies = new ArrayList<String>();
+
+        try {
+            for (int i = 0; i < body.length(); i++) {
+                JSONObject mainVal = body.getJSONObject(i);
+                //JSONObject Objtitles = mainVal.getJSONObject("title");
+                tempMovies.add(mainVal.getString("title"));
+            }
+            movies = tempMovies;
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /*Called when update movies*/
+    public void updateMovies(View view) {
+        Runnable getMovies = new Runnable() {
+            public void run(){
+                String apikey = "a8hp9y82qahh6hsbq72xtpn3";
+                HttpPost post = new HttpPost("http://api.rottentomatoes.com/api/public/v1.0/lists/movies/in_theaters.json?apikey="+apikey+"&page_limit=1");
+                DefaultHttpClient client = new DefaultHttpClient();
+                StringEntity se = null;
+                try {
+                    HttpResponse resp = client.execute(post);
+                    HttpEntity entity = resp.getEntity();
+                    String body = parseEntity(entity);
+                    try {
+                        JSONObject json = new JSONObject(body);
+                        JSONArray main = json.getJSONArray("movies");
+                        getMoviesFromJsonArray(main);
+                    }
+                    catch (JSONException j){
+                        j.printStackTrace();
+                    }
+                }
+                catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        };
+
+        new Thread(getMovies).start();
+
+    }
+
     /*Called when update weather*/
     public void updateWeather(View view) {
         Runnable getForecast = new Runnable() {
@@ -498,21 +548,46 @@ public class MainActivity extends FragmentActivity implements
                             String token = "_DUpeCYJqwWUjlXijdFIpNKvpQjAA_CV";
                             String tokenSecret = "ljnwwyEaVkZyyuaR5fCket9RWyw";
 
-                            JSONArray weather = json.getJSONArray("weather");
-                            System.out.println("Got here");
-                            JSONObject day0W = main.getJSONObject(0);
-                            JSONObject day1W = main.getJSONObject(1);
-                            JSONObject day2W = main.getJSONObject(2);
-                            JSONObject day3W = main.getJSONObject(3);
-                            JSONObject day4W = weather.getJSONObject(4);
+                            Yelp yelp = new Yelp(consumerKey, consumerSecret, token, tokenSecret);
+                            String response = yelp.search("burritos", 30.361471, -87.164326);
+
+                            System.out.println(response);
+                            boolean rainy = true;
+                            // If weather is rainy or chance of precipitation
+                                    if (rainy){
+                                    for (int i = 0; i < yelp.indoor.length; i++){
+                                            String options = yelp.search(yelp.indoor[i],30.361471, -87.164326);
+                                        }
+                                }
+                            else{
+                                    for (int i = 0; i < yelp.outdoor.length; i++){
+                                            String options = yelp.search(yelp.outdoor[i],30.361471, -87.164326);
+                                        }
+                                }
+
+                            JSONObject day0W = (main.getJSONObject(0)).getJSONArray("weather").getJSONObject(0);
+                            JSONObject day1W = (main.getJSONObject(1)).getJSONArray("weather").getJSONObject(0);
+                            JSONObject day2W = (main.getJSONObject(2)).getJSONArray("weather").getJSONObject(0);
+                            JSONObject day3W = (main.getJSONObject(3)).getJSONArray("weather").getJSONObject(0);
+                            JSONObject day4W = (main.getJSONObject(4)).getJSONArray("weather").getJSONObject(0);
+
+                            System.out.println(day0W);
+                            System.out.println(day1W);
+                            System.out.println(day2W);
+                            System.out.println(day3W);
+                            System.out.println(day4W);
+
                             String day0Icon = day0W.getString("icon");
-                            System.out.println(day0Icon);
                             String day1Icon = day1W.getString("icon");
                             String day2Icon = day2W.getString("icon");
                             String day3Icon = day3W.getString("icon");
                             String day4Icon = day4W.getString("icon");
 
-
+                            System.out.println(day0Icon);
+                            System.out.println(day1Icon);
+                            System.out.println(day2Icon);
+                            System.out.println(day3Icon);
+                            System.out.println(day4Icon);
 
                             new DownloadImageTask((ImageView) findViewById(R.id.imageDay0))
                                     .execute("http://openweathermap.org/img/w/" + day0Icon + ".png");
@@ -750,7 +825,7 @@ public class MainActivity extends FragmentActivity implements
                 EditText editIp = (EditText) findViewById(R.id.editText);
                 String ip_address = editIp.getText().toString();
                 HttpPost post;
-                if (ip_address.equals("") || ip_address.equals("ip Address")) {
+                if (ip_address.equals("")) {
                     Log.w("test", "an ip address was not inputted");
                     post = new HttpPost("http://172.27.98.94/rpi");
                 } else {
