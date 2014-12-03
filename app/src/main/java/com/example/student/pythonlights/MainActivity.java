@@ -684,13 +684,6 @@ public class MainActivity extends FragmentActivity implements
             TextView titleSummary = (TextView) findViewById(R.id.titleSummary);
             titleSummary.setText("Summary");
 
-            TextView movieTitle = (TextView) findViewById(R.id.textView21);
-            if (!movieTitles.isEmpty()) {
-                movieTitle.setText(movieTitles.get(0));
-            } else {
-                movieTitle.setText("Updating");
-            }
-
             ArrayList<TextView> movieRenders = new ArrayList<TextView>();
 
             TextView movieTitle1 = (TextView) findViewById(R.id.title1);
@@ -746,7 +739,7 @@ public class MainActivity extends FragmentActivity implements
             } else {
     //                movieTitle1.setText("Updating");
 
-                for (int i = 0; i < 5; i++) {
+                for (int i = 0; i < 6; i++) {
                     //set the movie title
                     movieRenders.get(i * 3).setText("Updating");
                     //set the movie rating
@@ -765,8 +758,6 @@ public class MainActivity extends FragmentActivity implements
             TextView titleSummary = (TextView) findViewById(R.id.titleSummary);
             titleSummary.setText("");
 
-            TextView movieTitle = (TextView) findViewById(R.id.textView21);
-            movieTitle.setText("");
             ArrayList<TextView> movieRenders = new ArrayList<TextView>();
 
             TextView movieTitle1 = (TextView) findViewById(R.id.title1);
@@ -807,7 +798,7 @@ public class MainActivity extends FragmentActivity implements
             movieRenders.add(movieRating6);
             movieRenders.add(movieSummary6);
 
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < 6; i++) {
                 //set the movie title
                 movieRenders.get(i * 3).setText("");
                 //set the movie rating
@@ -820,6 +811,18 @@ public class MainActivity extends FragmentActivity implements
 
 	/*Called when update weather*/
 	public void updateWeather(View view) {
+        TextView variousLo = (TextView) findViewById(R.id.LoDay0);
+        CharSequence LoCurrent = variousLo.getText();
+        TextView userHelp = (TextView) findViewById(R.id.userHelp);
+        if(LoCurrent.equals("")) {
+            userHelp.setText("Click once more to see updates");
+        }
+        else if(LoCurrent.equals("Updating")) {
+            userHelp.setText("");
+        }
+        else {
+            userHelp.setText("");
+        }
 		Runnable getForecast = new Runnable() {
 			public void run() {
 				Looper.prepare();
