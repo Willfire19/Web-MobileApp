@@ -78,7 +78,9 @@ public class MainActivity extends FragmentActivity implements
     Double currentTemp;
     ArrayList<Double> lowTemps = new ArrayList<Double>();
     ArrayList<Double> hiTemps = new ArrayList<Double>();
-    ArrayList<String> movies = new ArrayList<String>();
+    ArrayList<String> movieTitles = new ArrayList<String>();
+    ArrayList<String> movieRatings = new ArrayList<String>();
+    ArrayList<String> movieSummaries = new ArrayList<String>();
     String currentWeather = "";
 
 
@@ -463,7 +465,9 @@ public class MainActivity extends FragmentActivity implements
     }
 
     public void getMoviesFromJsonArray(JSONArray body) {
-        ArrayList<String> tempMovies = new ArrayList<String>();
+        ArrayList<String> tempMovieTitles = new ArrayList<String>();
+        ArrayList<String> tempMovieRatings = new ArrayList<String>();
+        ArrayList<String> tempMovieSummaries = new ArrayList<String>();
 
         try {
             for (int i = 0; i < body.length(); i++) {
@@ -471,9 +475,14 @@ public class MainActivity extends FragmentActivity implements
                 Log.v("test", mainVal.toString());
                 Log.v("test", mainVal.getString("title"));
                 //JSONObject Objtitles = mainVal.getJSONObject("title");
-                tempMovies.add(mainVal.getString("title"));
+                tempMovieTitles.add(mainVal.getString("title"));
+                tempMovieSummaries.add(mainVal.getString("synopsis"));
+                JSONObject ratings = mainVal.getJSONObject("ratings");
+                tempMovieRatings.add(ratings.getString("critics_score"));
             }
-            movies = tempMovies;
+            movieTitles = tempMovieTitles;
+            movieRatings = tempMovieRatings;
+            movieSummaries = tempMovieSummaries;
 
 
         } catch (JSONException e) {
@@ -486,7 +495,7 @@ public class MainActivity extends FragmentActivity implements
         Runnable getMovies = new Runnable() {
             public void run(){
                 String apikey = "a8hp9y82qahh6hsbq72xtpn3";
-                HttpPost post = new HttpPost("http://api.rottentomatoes.com/api/public/v1.0/lists/movies/in_theaters.json?apikey="+apikey+"&page_limit=1");
+                HttpPost post = new HttpPost("http://api.rottentomatoes.com/api/public/v1.0/lists/movies/in_theaters.json?apikey="+apikey+"&page_limit=6");
                 DefaultHttpClient client = new DefaultHttpClient();
                 StringEntity se = null;
                 try {
@@ -512,13 +521,68 @@ public class MainActivity extends FragmentActivity implements
         };
 
         new Thread(getMovies).start();
-        TextView movieTitle = (TextView) findViewById(R.id.textView21);
-        if (!movies.isEmpty()) {
-            movieTitle.setText(movies.get(0));
-        } else {
-            movieTitle.setText("Updating");
 
-        }
+        ArrayList<TextView> movieRenders = new ArrayList<TextView>();
+
+        TextView movieTitle1 = (TextView) findViewById(R.id.title1);
+        TextView movieRating1 = (TextView) findViewById(R.id.rating1);
+        TextView movieSummary1 = (TextView) findViewById(R.id.summary1);
+        TextView movieTitle2 = (TextView) findViewById(R.id.title2);
+        TextView movieRating2 = (TextView) findViewById(R.id.rating2);
+        TextView movieSummary2 = (TextView) findViewById(R.id.summary2);
+        TextView movieTitle3 = (TextView) findViewById(R.id.title3);
+        TextView movieRating3 = (TextView) findViewById(R.id.rating3);
+        TextView movieSummary3 = (TextView) findViewById(R.id.summary3);
+        TextView movieTitle4 = (TextView) findViewById(R.id.title4);
+        TextView movieRating4 = (TextView) findViewById(R.id.rating4);
+        TextView movieSummary4 = (TextView) findViewById(R.id.summary4);
+        TextView movieTitle5 = (TextView) findViewById(R.id.title5);
+        TextView movieRating5 = (TextView) findViewById(R.id.rating5);
+        TextView movieSummary5 = (TextView) findViewById(R.id.summary5);
+        TextView movieTitle6 = (TextView) findViewById(R.id.title6);
+        TextView movieRating6 = (TextView) findViewById(R.id.rating6);
+        TextView movieSummary6 = (TextView) findViewById(R.id.summary6);
+
+        movieRenders.add(movieTitle1);
+        movieRenders.add(movieRating1);
+        movieRenders.add(movieSummary1);
+        movieRenders.add(movieTitle2);
+        movieRenders.add(movieRating2);
+        movieRenders.add(movieSummary2);
+        movieRenders.add(movieTitle3);
+        movieRenders.add(movieRating3);
+        movieRenders.add(movieSummary3);
+        movieRenders.add(movieTitle4);
+        movieRenders.add(movieRating4);
+        movieRenders.add(movieSummary4);
+        movieRenders.add(movieTitle5);
+        movieRenders.add(movieRating5);
+        movieRenders.add(movieSummary5);
+        movieRenders.add(movieTitle6);
+        movieRenders.add(movieRating6);
+        movieRenders.add(movieSummary6);
+
+//        if (!movies.isEmpty()) {
+//            movieTitle1.setText(movies.get(0));
+//
+//            for(int i = 0; i < movies.size(); i++){
+//                //set the movie title
+//                movieRenders.get(i*3).setText(movies.get(i));
+//            }
+//            //movieTitle.setText(movies.get(0));
+//        } else {
+//            movieTitle1.setText("Updating");
+//
+//            for(int i = 0; i < 5; i++){
+//                //set the movie title
+//                movieRenders.get(i*3).setText("Updating");
+//                //set the movie rating
+//                movieRenders.get((i+1)*3).setText("Updating");
+//                //set the movie summary
+//                movieRenders.get((i+2)*3).setText("Updating");
+//            }
+//
+//        }
 
     }
 
@@ -834,7 +898,7 @@ public class MainActivity extends FragmentActivity implements
             Runnable getMovies = new Runnable() {
                 public void run(){
                     String apikey = "a8hp9y82qahh6hsbq72xtpn3";
-                    HttpGet post = new HttpGet("http://api.rottentomatoes.com/api/public/v1.0/lists/movies/in_theaters.json?apikey="+apikey+"&page_limit=1");
+                    HttpGet post = new HttpGet("http://api.rottentomatoes.com/api/public/v1.0/lists/movies/in_theaters.json?apikey="+apikey+"&page_limit=6");
                     DefaultHttpClient client = new DefaultHttpClient();
                     StringEntity se = null;
                     try {
@@ -861,10 +925,76 @@ public class MainActivity extends FragmentActivity implements
 
             new Thread(getMovies).start();
             TextView movieTitle = (TextView) findViewById(R.id.textView21);
-            if (!movies.isEmpty()) {
-                movieTitle.setText(movies.get(0));
+            if (!movieTitles.isEmpty()) {
+                movieTitle.setText(movieTitles.get(0));
             } else {
                 movieTitle.setText("Updating");
+
+            }
+
+            ArrayList<TextView> movieRenders = new ArrayList<TextView>();
+
+            TextView movieTitle1 = (TextView) findViewById(R.id.title1);
+            TextView movieRating1 = (TextView) findViewById(R.id.rating1);
+            TextView movieSummary1 = (TextView) findViewById(R.id.summary1);
+            TextView movieTitle2 = (TextView) findViewById(R.id.title2);
+            TextView movieRating2 = (TextView) findViewById(R.id.rating2);
+            TextView movieSummary2 = (TextView) findViewById(R.id.summary2);
+            TextView movieTitle3 = (TextView) findViewById(R.id.title3);
+            TextView movieRating3 = (TextView) findViewById(R.id.rating3);
+            TextView movieSummary3 = (TextView) findViewById(R.id.summary3);
+            TextView movieTitle4 = (TextView) findViewById(R.id.title4);
+            TextView movieRating4 = (TextView) findViewById(R.id.rating4);
+            TextView movieSummary4 = (TextView) findViewById(R.id.summary4);
+            TextView movieTitle5 = (TextView) findViewById(R.id.title5);
+            TextView movieRating5 = (TextView) findViewById(R.id.rating5);
+            TextView movieSummary5 = (TextView) findViewById(R.id.summary5);
+            TextView movieTitle6 = (TextView) findViewById(R.id.title6);
+            TextView movieRating6 = (TextView) findViewById(R.id.rating6);
+            TextView movieSummary6 = (TextView) findViewById(R.id.summary6);
+
+            movieRenders.add(movieTitle1);
+            movieRenders.add(movieRating1);
+            movieRenders.add(movieSummary1);
+            movieRenders.add(movieTitle2);
+            movieRenders.add(movieRating2);
+            movieRenders.add(movieSummary2);
+            movieRenders.add(movieTitle3);
+            movieRenders.add(movieRating3);
+            movieRenders.add(movieSummary3);
+            movieRenders.add(movieTitle4);
+            movieRenders.add(movieRating4);
+            movieRenders.add(movieSummary4);
+            movieRenders.add(movieTitle5);
+            movieRenders.add(movieRating5);
+            movieRenders.add(movieSummary5);
+            movieRenders.add(movieTitle6);
+            movieRenders.add(movieRating6);
+            movieRenders.add(movieSummary6);
+
+            if (!movieTitles.isEmpty() && !movieRatings.isEmpty() && !movieSummaries.isEmpty()) {
+//                movieTitle1.setText(movies.get(0));
+
+                for(int i = 0; i < movieTitles.size(); i++){
+                    //set the movie title
+                    movieRenders.get(i*3).setText(movieTitles.get(i));
+                    //set the movie rating
+                    movieRenders.get((i*3) + 1).setText(movieRatings.get(i));
+                    //set the movie summary
+                    movieRenders.get((i*3) + 2).setText(movieSummaries.get(i));
+                }
+                //movieTitle.setText(movies.get(0));
+            } else {
+//                movieTitle1.setText("Updating");
+
+                for(int i = 0; i < 5; i++){
+                    //set the movie title
+                    movieRenders.get(i*3).setText("Updating");
+                    //set the movie rating
+                    movieRenders.get((i*3) + 1).setText("Updating");
+                    //set the movie summary
+                    movieRenders.get((i*3) + 2).setText("Updating");
+                }
 
             }
         }
