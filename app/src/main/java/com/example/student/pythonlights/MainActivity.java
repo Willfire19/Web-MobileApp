@@ -391,32 +391,32 @@ public class MainActivity extends FragmentActivity implements
             for(int i = 0; i < 16; i ++){
                 DefaultHttpClient client = new DefaultHttpClient();
                 String lightString = "";
-                for (int j = 1; j < 30; j += 2){
+                for (int j = 1; j < 2; j += 2){
                     if((j -1) % 4 != 2){
                         // Blue
                         if (i % 2 == 0){
                             lightString += "{\"intensity\":0.75,\"red\":0,\"blue\":255,\"green\":0,\"lightId\":"+j%32+"},";
-                            Log.w("test", j+","+j%32+",Blue");
+//                            Log.w("test", j+","+j%32+",Blue");
                         }
                         else{
                             lightString += "{\"intensity\":0.75,\"red\":255,\"blue\":255,\"green\":255,\"lightId\":"+j%32+"},";
-                            Log.w("test", j+","+j%32+",White");
+//                            Log.w("test", j+","+j%32+",White");
                         }
                     }
                     else{
                         //White
                         if (i % 2 == 1){
                             lightString += "{\"intensity\":0.75,\"red\":0,\"blue\":255,\"green\":0,\"lightId\":"+j%32+"},";
-                            Log.w("test", j+","+j%32+",Blue");
+//                            Log.w("test", j+","+j%32+",Blue");
                         }
                         else{
                             lightString += "{\"intensity\":0.75,\"red\":255,\"blue\":255,\"green\":255,\"lightId\":"+j%32+"},";
-                            Log.w("test", j+","+j%32+",White");
+//                            Log.w("test", j+","+j%32+",White");
                         }
-                        Log.w("test", ""+j%32);
+//                        Log.w("test", ""+j%32);
                     }
                 }
-                Log.v("test",lightString);
+//                Log.v("test",lightString);
                 lightString = lightString.substring(0,lightString.length()-1);
                 StringEntity se = null;
                 try {
@@ -432,14 +432,13 @@ public class MainActivity extends FragmentActivity implements
                     HttpResponse resp = client.execute(post);
                     resp.getEntity();
                     client.getConnectionManager().shutdown();
-                    Log.w("test", "POST data is sent to raspberry pi");
+//                    Log.w("test", "POST data is sent to raspberry pi");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         }
         else{
-            System.out.println("I got here and it was still" + sunny);
             DefaultHttpClient client = new DefaultHttpClient();
             StringEntity se = null;
             try {
@@ -455,7 +454,7 @@ public class MainActivity extends FragmentActivity implements
                 HttpResponse resp = client.execute(post);
                 resp.getEntity();
                 client.getConnectionManager().shutdown();
-                Log.w("test", "POST data is sent to raspberry pi");
+//                Log.w("test", "POST data is sent to raspberry pi");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -612,6 +611,7 @@ public class MainActivity extends FragmentActivity implements
 
                             new DownloadImageTask((ImageView) findViewById(R.id.imageDay0))
                                     .execute("http://openweathermap.org/img/w/" + day0Icon + ".png");
+                            System.out.println("I got one!");
 
                             new DownloadImageTask((ImageView) findViewById(R.id.imageDay1))
                                     .execute("http://openweathermap.org/img/w/" + day1Icon + ".png");
@@ -624,8 +624,6 @@ public class MainActivity extends FragmentActivity implements
 
                             new DownloadImageTask((ImageView) findViewById(R.id.imageDay4))
                                     .execute("http://openweathermap.org/img/w/" + day4Icon + ".png");
-
-                            Handler mHandler = new Handler();
 
                         } catch (JSONException e) {
                             e.printStackTrace();
