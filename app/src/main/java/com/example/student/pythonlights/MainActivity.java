@@ -81,7 +81,7 @@ public class MainActivity extends FragmentActivity implements
     ArrayList<String> movieTitles = new ArrayList<String>();
     ArrayList<String> movieRatings = new ArrayList<String>();
     ArrayList<String> movieSummaries = new ArrayList<String>();
-    String currentWeather = "";
+    boolean sunny = false;
 
 
     /*
@@ -633,7 +633,8 @@ public class MainActivity extends FragmentActivity implements
                 System.out.println(day3W);
                 System.out.println(day4W);
 
-                currentWeather = day0W.getString("main");
+                String currentWeather = day0W.getString("main");
+                sunny = currentWeather.equals("") || currentWeather.equals("Clear");
                 System.out.println(currentWeather);
                 String day0Icon = day0W.getString("icon");
                 String day1Icon = day1W.getString("icon");
@@ -669,6 +670,84 @@ public class MainActivity extends FragmentActivity implements
 
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void fillMovie(final View view,boolean fill) {
+
+        if (fill) {
+        TextView movieTitle = (TextView) findViewById(R.id.textView21);
+        if (!movieTitles.isEmpty()) {
+            movieTitle.setText(movieTitles.get(0));
+        } else {
+            movieTitle.setText("Updating");
+
+        }
+
+        ArrayList<TextView> movieRenders = new ArrayList<TextView>();
+
+        TextView movieTitle1 = (TextView) findViewById(R.id.title1);
+        TextView movieRating1 = (TextView) findViewById(R.id.rating1);
+        TextView movieSummary1 = (TextView) findViewById(R.id.summary1);
+        TextView movieTitle2 = (TextView) findViewById(R.id.title2);
+        TextView movieRating2 = (TextView) findViewById(R.id.rating2);
+        TextView movieSummary2 = (TextView) findViewById(R.id.summary2);
+        TextView movieTitle3 = (TextView) findViewById(R.id.title3);
+        TextView movieRating3 = (TextView) findViewById(R.id.rating3);
+        TextView movieSummary3 = (TextView) findViewById(R.id.summary3);
+        TextView movieTitle4 = (TextView) findViewById(R.id.title4);
+        TextView movieRating4 = (TextView) findViewById(R.id.rating4);
+        TextView movieSummary4 = (TextView) findViewById(R.id.summary4);
+        TextView movieTitle5 = (TextView) findViewById(R.id.title5);
+        TextView movieRating5 = (TextView) findViewById(R.id.rating5);
+        TextView movieSummary5 = (TextView) findViewById(R.id.summary5);
+        TextView movieTitle6 = (TextView) findViewById(R.id.title6);
+        TextView movieRating6 = (TextView) findViewById(R.id.rating6);
+        TextView movieSummary6 = (TextView) findViewById(R.id.summary6);
+
+        movieRenders.add(movieTitle1);
+        movieRenders.add(movieRating1);
+        movieRenders.add(movieSummary1);
+        movieRenders.add(movieTitle2);
+        movieRenders.add(movieRating2);
+        movieRenders.add(movieSummary2);
+        movieRenders.add(movieTitle3);
+        movieRenders.add(movieRating3);
+        movieRenders.add(movieSummary3);
+        movieRenders.add(movieTitle4);
+        movieRenders.add(movieRating4);
+        movieRenders.add(movieSummary4);
+        movieRenders.add(movieTitle5);
+        movieRenders.add(movieRating5);
+        movieRenders.add(movieSummary5);
+        movieRenders.add(movieTitle6);
+        movieRenders.add(movieRating6);
+        movieRenders.add(movieSummary6);
+
+        if (!movieTitles.isEmpty() && !movieRatings.isEmpty() && !movieSummaries.isEmpty()) {
+//                movieTitle1.setText(movies.get(0));
+
+            for(int i = 0; i < movieTitles.size(); i++){
+                //set the movie title
+                movieRenders.get(i*3).setText(movieTitles.get(i));
+                //set the movie rating
+                movieRenders.get((i*3) + 1).setText(movieRatings.get(i));
+                //set the movie summary
+                movieRenders.get((i*3) + 2).setText(movieSummaries.get(i));
+            }
+            //movieTitle.setText(movies.get(0));
+        } else {
+//                movieTitle1.setText("Updating");
+
+            for (int i = 0; i < 5; i++) {
+                //set the movie title
+                movieRenders.get(i * 3).setText("Updating");
+                //set the movie rating
+                movieRenders.get((i * 3) + 1).setText("Updating");
+                //set the movie summary
+                movieRenders.get((i * 3) + 2).setText("Updating");
+            }
+        }
         }
     }
 
@@ -711,15 +790,12 @@ public class MainActivity extends FragmentActivity implements
             public void run() {
                 EditText editIp = (EditText) findViewById(R.id.editText);
                 String ip_address = editIp.getText().toString();
-                System.out.println(currentWeather);
-                boolean weatherStatus = currentWeather.equals("") || currentWeather.equals("Clear");
-                System.out.println(weatherStatus);
                 if (ip_address.equals("") || ip_address.equals("ip Address")) {
                     Log.w("test", "an ip address was not inputted");
-                    sendWeatherLights("172.27.98.94",weatherStatus);
+                    sendWeatherLights("172.27.98.94",sunny);
                 } else {
 
-                    sendWeatherLights(ip_address,weatherStatus);
+                    sendWeatherLights(ip_address,sunny);
                 }
 
 
@@ -872,80 +948,21 @@ public class MainActivity extends FragmentActivity implements
                 }
             };
 
-            new Thread(getMovies).start();
-            TextView movieTitle = (TextView) findViewById(R.id.textView21);
-            if (!movieTitles.isEmpty()) {
-                movieTitle.setText(movieTitles.get(0));
-            } else {
-                movieTitle.setText("Updating");
+            if(sunny) {
+                //Go outside
+                //handle clearing movies
+                fillMovie(view,false);
+            }
+            else {
+                // Movies
+                //Handle resizing go outside and clearing it
 
+
+                new Thread(getMovies).start();
+                fillMovie(view,true);
             }
 
-            ArrayList<TextView> movieRenders = new ArrayList<TextView>();
 
-            TextView movieTitle1 = (TextView) findViewById(R.id.title1);
-            TextView movieRating1 = (TextView) findViewById(R.id.rating1);
-            TextView movieSummary1 = (TextView) findViewById(R.id.summary1);
-            TextView movieTitle2 = (TextView) findViewById(R.id.title2);
-            TextView movieRating2 = (TextView) findViewById(R.id.rating2);
-            TextView movieSummary2 = (TextView) findViewById(R.id.summary2);
-            TextView movieTitle3 = (TextView) findViewById(R.id.title3);
-            TextView movieRating3 = (TextView) findViewById(R.id.rating3);
-            TextView movieSummary3 = (TextView) findViewById(R.id.summary3);
-            TextView movieTitle4 = (TextView) findViewById(R.id.title4);
-            TextView movieRating4 = (TextView) findViewById(R.id.rating4);
-            TextView movieSummary4 = (TextView) findViewById(R.id.summary4);
-            TextView movieTitle5 = (TextView) findViewById(R.id.title5);
-            TextView movieRating5 = (TextView) findViewById(R.id.rating5);
-            TextView movieSummary5 = (TextView) findViewById(R.id.summary5);
-            TextView movieTitle6 = (TextView) findViewById(R.id.title6);
-            TextView movieRating6 = (TextView) findViewById(R.id.rating6);
-            TextView movieSummary6 = (TextView) findViewById(R.id.summary6);
-
-            movieRenders.add(movieTitle1);
-            movieRenders.add(movieRating1);
-            movieRenders.add(movieSummary1);
-            movieRenders.add(movieTitle2);
-            movieRenders.add(movieRating2);
-            movieRenders.add(movieSummary2);
-            movieRenders.add(movieTitle3);
-            movieRenders.add(movieRating3);
-            movieRenders.add(movieSummary3);
-            movieRenders.add(movieTitle4);
-            movieRenders.add(movieRating4);
-            movieRenders.add(movieSummary4);
-            movieRenders.add(movieTitle5);
-            movieRenders.add(movieRating5);
-            movieRenders.add(movieSummary5);
-            movieRenders.add(movieTitle6);
-            movieRenders.add(movieRating6);
-            movieRenders.add(movieSummary6);
-
-            if (!movieTitles.isEmpty() && !movieRatings.isEmpty() && !movieSummaries.isEmpty()) {
-//                movieTitle1.setText(movies.get(0));
-
-                for(int i = 0; i < movieTitles.size(); i++){
-                    //set the movie title
-                    movieRenders.get(i*3).setText(movieTitles.get(i));
-                    //set the movie rating
-                    movieRenders.get((i*3) + 1).setText(movieRatings.get(i));
-                    //set the movie summary
-                    movieRenders.get((i*3) + 2).setText(movieSummaries.get(i));
-                }
-                //movieTitle.setText(movies.get(0));
-            } else {
-//                movieTitle1.setText("Updating");
-
-                for(int i = 0; i < 5; i++){
-                    //set the movie title
-                    movieRenders.get(i*3).setText("Updating");
-                    //set the movie rating
-                    movieRenders.get((i*3) + 1).setText("Updating");
-                    //set the movie summary
-                    movieRenders.get((i*3) + 2).setText("Updating");
-                }
-
-            }
         }
 
     /*Called when green lights button is pressed*/
@@ -957,7 +974,6 @@ public class MainActivity extends FragmentActivity implements
                 EditText editIp = (EditText) findViewById(R.id.editText);
                 String ip_address = editIp.getText().toString();
                 HttpPost post;
-                Log.v("test",currentWeather);
                 if (ip_address.equals("")) {
                     Log.w("test", "an ip address was not inputted");
                     post = new HttpPost("http://172.27.98.94/rpi");
