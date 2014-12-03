@@ -507,7 +507,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text=""
-        android:id="@+id/textView"
+        android:id="@+id/outside"
         android:layout_toEndOf="@+id/GPS"
         android:textSize="80sp"
         android:layout_below="@+id/tableLayout2"
