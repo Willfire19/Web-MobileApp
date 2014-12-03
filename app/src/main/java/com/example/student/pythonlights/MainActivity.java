@@ -390,7 +390,7 @@ public class MainActivity extends FragmentActivity implements
         System.out.println(sunny);
         if (!sunny){
 
-            for(int i = 0; i < 16; i ++){
+            for(int i = 1; i < 2; i ++){
                 DefaultHttpClient client = new DefaultHttpClient();
                 String lightString = "";
                 for (int j = 1; j < 2; j += 2){
