@@ -393,16 +393,16 @@ public class MainActivity extends FragmentActivity implements
             for(int i = 1; i < 2; i ++){
                 DefaultHttpClient client = new DefaultHttpClient();
                 String lightString = "";
-                for (int j = 1; j < 2; j += 2){
+                for (int j = 1; j < 32; j += 2){
                     if((j -1) % 4 != 2){
                         // Blue
                         if (i % 2 == 0){
                             lightString += "{\"intensity\":0.75,\"red\":0,\"blue\":255,\"green\":0,\"lightId\":"+j%32+"},";
-//                            Log.w("test", j+","+j%32+",Blue");
+                            Log.w("test", j+","+j%32+",Blue");
                         }
                         else{
                             lightString += "{\"intensity\":0.75,\"red\":255,\"blue\":255,\"green\":255,\"lightId\":"+j%32+"},";
-//                            Log.w("test", j+","+j%32+",White");
+                            Log.w("test", j+","+j%32+",White");
                         }
                     }
                     else{
@@ -418,7 +418,7 @@ public class MainActivity extends FragmentActivity implements
 //                        Log.w("test", ""+j%32);
                     }
                 }
-//                Log.v("test",lightString);
+                Log.v("test",lightString);
                 lightString = lightString.substring(0,lightString.length()-1);
                 StringEntity se = null;
                 try {
@@ -843,61 +843,6 @@ public class MainActivity extends FragmentActivity implements
                 day4Hi.setText("Updating");
                 Log.v("test", "High" + hiTemps.toString());
             }
-
-//            Runnable runnable = new Runnable() {
-//                public void run() {
-//                    HttpPost post;
-//                    Switch gpsSwitch = (Switch) findViewById(R.id.GPS);
-//                    if (gpsSwitch != null) {
-//                        if (gpsSwitch.isChecked()) {
-//                            //use latitude and longitude
-//                            post = new HttpPost("http://api.openweathermap.org/data/2.5/weather?lat=" + mCurrentLocation.getLatitude() +
-//                                    "&lon=" + mCurrentLocation.getLongitude() + "&units=imperial");
-//                        } else {
-//                            EditText editLocality = (EditText) findViewById(R.id.locality);
-//                            String city = editLocality.getText().toString();
-//                            if (city != null && !city.equals("")) {
-//                                post = new HttpPost("http://api.openweathermap.org/data/2.5/weather?units=imperial&q=" + city);
-//                            } else {
-//                                //Todo: No city, so notify user
-//                                Log.v("test", "No city given");
-//                                return;
-//                            }
-//                        }
-//                        Log.w("test", "Before HttpClient");
-//                        DefaultHttpClient client = new DefaultHttpClient();
-//                        Log.w("test", "httpclient is successfully made");
-//
-//                        StringEntity se = null;
-//                        try {
-//                            HttpResponse resp = client.execute(post);
-//                            HttpEntity entity = resp.getEntity();
-//                            String body = parseEntity(entity);
-//                            try {
-//                                JSONObject main = new JSONObject(body);
-//                                //Get main temp
-//                                currentTemp = getTemperature(main);
-//
-//
-//                            } catch (JSONException e) {
-//                                e.printStackTrace();
-//                            }
-//
-//                        } catch (IOException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//
-//                }
-//            };
-//
-//            new Thread(runnable).start();
-//            TextView currentTempView = (TextView) findViewById(R.id.textView21);
-//            if (currentTemp != null) {
-//                currentTempView.setText(currentTemp.toString() + "° F");
-//            } else {
-//                currentTempView.setText("Updating");
-//            }
 
             Runnable getMovies = new Runnable() {
                 public void run(){

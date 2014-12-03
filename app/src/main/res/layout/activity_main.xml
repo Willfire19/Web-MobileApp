@@ -317,9 +317,10 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_below="@+id/tableLayout"
-        android:layout_toLeftOf="@+id/button"
         android:layout_toStartOf="@+id/button"
-        android:layout_marginTop="75dp">
+        android:layout_marginTop="75dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true">
 
         <TableRow
             android:layout_width="fill_parent"
@@ -349,11 +350,11 @@
                 android:layout_marginRight="10dp" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="Summary"
                 android:id="@+id/titleSummary"
-                android:layout_column="4"
+                android:layout_column="3"
                 android:textSize="30sp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp" />
@@ -379,7 +380,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/summary1"
-                android:layout_column="4" />
+                android:layout_column="3" />
         </TableRow>
 
         <TableRow
@@ -402,7 +403,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/summary2"
-                android:layout_column="4" />
+                android:layout_column="3" />
         </TableRow>
 
         <TableRow
@@ -425,7 +426,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/summary3"
-                android:layout_column="4" />
+                android:layout_column="3" />
         </TableRow>
 
         <TableRow
@@ -448,7 +449,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/summary4"
-                android:layout_column="4" />
+                android:layout_column="3" />
         </TableRow>
 
         <TableRow
@@ -471,7 +472,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/summary5"
-                android:layout_column="4" />
+                android:layout_column="3" />
         </TableRow>
 
         <TableRow
@@ -494,7 +495,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/summary6"
-                android:layout_column="4" />
+                android:layout_column="3" />
         </TableRow>
 
     </TableLayout>
