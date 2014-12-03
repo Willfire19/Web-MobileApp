@@ -522,6 +522,92 @@ public class MainActivity extends FragmentActivity implements
 
     }
 
+    public void processPost(HttpPost post){
+        DefaultHttpClient client = new DefaultHttpClient();
+        try {
+            HttpResponse resp = client.execute(post);
+            HttpEntity entity = resp.getEntity();
+            String body = parseEntity(entity);
+            try {
+                JSONObject json = new JSONObject(body);
+                JSONArray main = json.getJSONArray("list");
+                popTemperatures(main);
+
+                String[] outdoor = {"park","hike","Farmers Market"};
+                String[] indoor = {"theater","cafe","bar","restaurant"};
+                String consumerKey = "0VJ2QVBQYJqEBqNZ_0g6Xg";
+                String consumerSecret = "oI4ReNB4OsjHYCnczq4J9_3HLQ8";
+                String token = "_DUpeCYJqwWUjlXijdFIpNKvpQjAA_CV";
+                String tokenSecret = "ljnwwyEaVkZyyuaR5fCket9RWyw";
+
+                Yelp yelp = new Yelp(consumerKey, consumerSecret, token, tokenSecret);
+                String response = yelp.search("burritos", 30.361471, -87.164326);
+
+                System.out.println(response);
+                boolean rainy = true;
+                // If weather is rainy or chance of precipitation
+                if (rainy){
+                    for (int i = 0; i < yelp.indoor.length; i++){
+                        String options = yelp.search(yelp.indoor[i],30.361471, -87.164326);
+                    }
+                }
+                else{
+                    for (int i = 0; i < yelp.outdoor.length; i++){
+                        String options = yelp.search(yelp.outdoor[i],30.361471, -87.164326);
+                    }
+                }
+
+                JSONObject day0W = (main.getJSONObject(0)).getJSONArray("weather").getJSONObject(0);
+                JSONObject day1W = (main.getJSONObject(1)).getJSONArray("weather").getJSONObject(0);
+                JSONObject day2W = (main.getJSONObject(2)).getJSONArray("weather").getJSONObject(0);
+                JSONObject day3W = (main.getJSONObject(3)).getJSONArray("weather").getJSONObject(0);
+                JSONObject day4W = (main.getJSONObject(4)).getJSONArray("weather").getJSONObject(0);
+
+                System.out.println(day0W);
+                System.out.println(day1W);
+                System.out.println(day2W);
+                System.out.println(day3W);
+                System.out.println(day4W);
+
+                currentWeather = day0W.getString("main");
+                System.out.println(currentWeather);
+                String day0Icon = day0W.getString("icon");
+                String day1Icon = day1W.getString("icon");
+                String day2Icon = day2W.getString("icon");
+                String day3Icon = day3W.getString("icon");
+                String day4Icon = day4W.getString("icon");
+
+                System.out.println(day0Icon);
+                System.out.println(day1Icon);
+                System.out.println(day2Icon);
+                System.out.println(day3Icon);
+                System.out.println(day4Icon);
+
+                new DownloadImageTask((ImageView) findViewById(R.id.imageDay0))
+                        .execute("http://openweathermap.org/img/w/" + day0Icon + ".png");
+                System.out.println("I got one!");
+
+                new DownloadImageTask((ImageView) findViewById(R.id.imageDay1))
+                        .execute("http://openweathermap.org/img/w/" + day1Icon + ".png");
+
+                new DownloadImageTask((ImageView) findViewById(R.id.imageDay2))
+                        .execute("http://openweathermap.org/img/w/" + day2Icon + ".png");
+
+                new DownloadImageTask((ImageView) findViewById(R.id.imageDay3))
+                        .execute("http://openweathermap.org/img/w/" + day3Icon + ".png");
+
+                new DownloadImageTask((ImageView) findViewById(R.id.imageDay4))
+                        .execute("http://openweathermap.org/img/w/" + day4Icon + ".png");
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     /*Called when update weather*/
     public void updateWeather(View view) {
         Runnable getForecast = new Runnable() {
@@ -546,98 +632,16 @@ public class MainActivity extends FragmentActivity implements
                         }
                     }
                     Log.w("test", "Before HttpClient");
-                    DefaultHttpClient client = new DefaultHttpClient();
                     Log.w("test", "httpclient is successfully made");
-
                     StringEntity se = null;
-                    try {
-                        HttpResponse resp = client.execute(post);
-                        HttpEntity entity = resp.getEntity();
-                        String body = parseEntity(entity);
-                        try {
-                            JSONObject json = new JSONObject(body);
-                            JSONArray main = json.getJSONArray("list");
-                            popTemperatures(main);
-
-                            String[] outdoor = {"park","hike","Farmers Market"};
-                            String[] indoor = {"theater","cafe","bar","restaurant"};
-                            String consumerKey = "0VJ2QVBQYJqEBqNZ_0g6Xg";
-                            String consumerSecret = "oI4ReNB4OsjHYCnczq4J9_3HLQ8";
-                            String token = "_DUpeCYJqwWUjlXijdFIpNKvpQjAA_CV";
-                            String tokenSecret = "ljnwwyEaVkZyyuaR5fCket9RWyw";
-
-                            Yelp yelp = new Yelp(consumerKey, consumerSecret, token, tokenSecret);
-                            String response = yelp.search("burritos", 30.361471, -87.164326);
-
-                            System.out.println(response);
-                            boolean rainy = true;
-                            // If weather is rainy or chance of precipitation
-                                    if (rainy){
-                                    for (int i = 0; i < yelp.indoor.length; i++){
-                                            String options = yelp.search(yelp.indoor[i],30.361471, -87.164326);
-                                        }
-                                }
-                            else{
-                                    for (int i = 0; i < yelp.outdoor.length; i++){
-                                            String options = yelp.search(yelp.outdoor[i],30.361471, -87.164326);
-                                        }
-                                }
-
-                            JSONObject day0W = (main.getJSONObject(0)).getJSONArray("weather").getJSONObject(0);
-                            JSONObject day1W = (main.getJSONObject(1)).getJSONArray("weather").getJSONObject(0);
-                            JSONObject day2W = (main.getJSONObject(2)).getJSONArray("weather").getJSONObject(0);
-                            JSONObject day3W = (main.getJSONObject(3)).getJSONArray("weather").getJSONObject(0);
-                            JSONObject day4W = (main.getJSONObject(4)).getJSONArray("weather").getJSONObject(0);
-
-                            System.out.println(day0W);
-                            System.out.println(day1W);
-                            System.out.println(day2W);
-                            System.out.println(day3W);
-                            System.out.println(day4W);
-
-                            currentWeather = day0W.getString("main");
-                            System.out.println(currentWeather);
-                            String day0Icon = day0W.getString("icon");
-                            String day1Icon = day1W.getString("icon");
-                            String day2Icon = day2W.getString("icon");
-                            String day3Icon = day3W.getString("icon");
-                            String day4Icon = day4W.getString("icon");
-
-                            System.out.println(day0Icon);
-                            System.out.println(day1Icon);
-                            System.out.println(day2Icon);
-                            System.out.println(day3Icon);
-                            System.out.println(day4Icon);
-
-                            new DownloadImageTask((ImageView) findViewById(R.id.imageDay0))
-                                    .execute("http://openweathermap.org/img/w/" + day0Icon + ".png");
-                            System.out.println("I got one!");
-
-                            new DownloadImageTask((ImageView) findViewById(R.id.imageDay1))
-                                    .execute("http://openweathermap.org/img/w/" + day1Icon + ".png");
-
-                            new DownloadImageTask((ImageView) findViewById(R.id.imageDay2))
-                                    .execute("http://openweathermap.org/img/w/" + day2Icon + ".png");
-
-                            new DownloadImageTask((ImageView) findViewById(R.id.imageDay3))
-                                    .execute("http://openweathermap.org/img/w/" + day3Icon + ".png");
-
-                            new DownloadImageTask((ImageView) findViewById(R.id.imageDay4))
-                                    .execute("http://openweathermap.org/img/w/" + day4Icon + ".png");
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    processPost(post);
                 }
 
             }
         };
 
         new Thread(getForecast).start();
+
         //Now update lights
         Runnable updateLights = new Runnable() {
             public void run() {
