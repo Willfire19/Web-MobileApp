@@ -673,6 +673,16 @@ public class MainActivity extends FragmentActivity implements
 		}
 	}
 
+    public void GetTheFuckOutside(final View view, boolean fill){
+        TextView outside = (TextView) findViewById(R.id.outside);
+        if( fill ){
+            outside.setText("GO OUTSIDE");
+        }
+        else{
+            outside.setText("");
+        }
+    }
+
 	public void fillMovie(final View view,boolean fill) {
 
 		if (fill) {
@@ -1020,6 +1030,7 @@ public class MainActivity extends FragmentActivity implements
 
 			if(sunny) {
 				//Go outside
+                GetTheFuckOutside(view, true);
 				//handle clearing movies
 				fillMovie(view,false);
 			}
@@ -1029,6 +1040,7 @@ public class MainActivity extends FragmentActivity implements
 
 
 				new Thread(getMovies).start();
+                GetTheFuckOutside(view, false);
 				fillMovie(view,true);
 			}
 
