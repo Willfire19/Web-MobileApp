@@ -9,6 +9,7 @@ import android.location.Location;
 import android.support.v4.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Looper;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -23,6 +24,7 @@ import android.location.*;
 import android.graphics.BitmapFactory;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.os.Handler;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -31,6 +33,7 @@ import java.io.InputStream;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.lang.Thread;
 
 
 import com.google.android.gms.common.ConnectionResult;
@@ -524,6 +527,7 @@ public class MainActivity extends FragmentActivity implements
     public void updateWeather(View view) {
         Runnable getForecast = new Runnable() {
             public void run() {
+                Looper.prepare();
                 HttpPost post;
                 Switch gpsSwitch = (Switch) findViewById(R.id.GPS);
                 if (gpsSwitch != null) {
@@ -606,21 +610,22 @@ public class MainActivity extends FragmentActivity implements
                             System.out.println(day3Icon);
                             System.out.println(day4Icon);
 
-//                            new DownloadImageTask((ImageView) findViewById(R.id.imageDay0))
-//                                    .execute("http://openweathermap.org/img/w/" + day0Icon + ".png");
-//
-//                            new DownloadImageTask((ImageView) findViewById(R.id.imageDay1))
-//                                    .execute("http://openweathermap.org/img/w/" + day1Icon + ".png");
-//
-//                            new DownloadImageTask((ImageView) findViewById(R.id.imageDay2))
-//                                    .execute("http://openweathermap.org/img/w/" + day2Icon + ".png");
-//
-//                            new DownloadImageTask((ImageView) findViewById(R.id.imageDay3))
-//                                    .execute("http://openweathermap.org/img/w/" + day3Icon + ".png");
-//
-//                            new DownloadImageTask((ImageView) findViewById(R.id.imageDay4))
-//                                    .execute("http://openweathermap.org/img/w/" + day4Icon + ".png");
+                            new DownloadImageTask((ImageView) findViewById(R.id.imageDay0))
+                                    .execute("http://openweathermap.org/img/w/" + day0Icon + ".png");
 
+                            new DownloadImageTask((ImageView) findViewById(R.id.imageDay1))
+                                    .execute("http://openweathermap.org/img/w/" + day1Icon + ".png");
+
+                            new DownloadImageTask((ImageView) findViewById(R.id.imageDay2))
+                                    .execute("http://openweathermap.org/img/w/" + day2Icon + ".png");
+
+                            new DownloadImageTask((ImageView) findViewById(R.id.imageDay3))
+                                    .execute("http://openweathermap.org/img/w/" + day3Icon + ".png");
+
+                            new DownloadImageTask((ImageView) findViewById(R.id.imageDay4))
+                                    .execute("http://openweathermap.org/img/w/" + day4Icon + ".png");
+
+                            Handler mHandler = new Handler();
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -980,6 +985,7 @@ public class MainActivity extends FragmentActivity implements
         protected Bitmap doInBackground(String... urls) {
             String urldisplay = urls[0];
             Bitmap mIcon11 = null;
+            Handler mHandler = null;
             try {
                 InputStream in = new java.net.URL(urldisplay).openStream();
                 mIcon11 = BitmapFactory.decodeStream(in);
